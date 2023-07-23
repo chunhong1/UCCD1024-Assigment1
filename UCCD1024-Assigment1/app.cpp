@@ -37,6 +37,7 @@ int main() {
     }
 
 	cout << "\n\n";
+    cout << "Hello World"<<endl;
 	system("pause");
 	return 0;
 }
@@ -120,3 +121,4 @@ bool isDuplicate(List* list, LibStudent& student) {
     }
     return false;
 }
+
