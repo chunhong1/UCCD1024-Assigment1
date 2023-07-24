@@ -24,6 +24,7 @@ bool displayWarnedStudent(List*, List*, List*);
 int menu();
 
 
+
 int main() {
     List studentList; // Create an instance of the List class
     char id[10];
@@ -39,6 +40,7 @@ int main() {
     }
 
     cout << endl;
+
     if (SearchStudent(&studentList, id, stu)) {
       cout << "Student Found!" << endl << endl;
       cout << "STUDENT INFORMATION" << endl;
@@ -51,6 +53,9 @@ int main() {
     else {
        cout << "Student Not Found." << endl;
     }
+
+
+    
 
 	cout << "\n\n";
 	system("pause");
@@ -118,7 +123,6 @@ bool ReadFile(string filename, List* list) {
 // function to check if a student record is a duplicate in the list
 bool isDuplicate(List* list, LibStudent& student) { 
 
-    LibStudent newStudent;
     Node* cur;
 
     //list will not duplicate if it is empty
@@ -139,15 +143,13 @@ bool isDuplicate(List* list, LibStudent& student) {
     return false;
 }
 
-//bool DeleteRecord(List* list, char* id) {
 
 
-//}
 
 
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
     char code[10];
-    cout << "Please Enter the Student id you would like to search: ";
+    cout << "Please Enter the Student ID you would like to search: ";
     cin >> code;
 
     Node* cur = list->head; 
@@ -164,7 +166,6 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
     }
     return false;
 }
-
 
 
     
