@@ -11,7 +11,6 @@ using namespace std;
 
 //constant
 const string STUDENT_INFO_FILE = "student.txt";
-
 //function prototype
 bool ReadFile(string, List*);
 bool isDuplicate(List* list, LibStudent& student);
@@ -27,6 +26,9 @@ int menu();
 
 int main() {
     List studentList; // Create an instance of the List class
+    char id[10];
+    LibStudent stu;
+ 
 
     if (ReadFile(STUDENT_INFO_FILE, &studentList)) {
         cout << "Data successfully read and stored in the list." << endl;
@@ -36,8 +38,21 @@ int main() {
         cout << "Failed to read data or encountered an error." << endl;
     }
 
+    cout << endl;
+    if (SearchStudent(&studentList, id, stu)) {
+      cout << "Student Found!" << endl << endl;
+      cout << "STUDENT INFORMATION" << endl;
+      cout << "ID: " << stu.id << endl;
+      cout << "NAME: " << stu.name << endl;
+      cout << "Course:" << stu.course << endl;
+      cout << "Phone No:" << stu.phone_no << endl;
+   
+    }
+    else {
+       cout << "Student Not Found." << endl;
+    }
+
 	cout << "\n\n";
-    cout << "Hello World"<<endl;
 	system("pause");
 	return 0;
 }
@@ -102,6 +117,8 @@ bool ReadFile(string filename, List* list) {
 
 // function to check if a student record is a duplicate in the list
 bool isDuplicate(List* list, LibStudent& student) { 
+
+    LibStudent newStudent;
     Node* cur;
 
     //list will not duplicate if it is empty
@@ -121,4 +138,38 @@ bool isDuplicate(List* list, LibStudent& student) {
     }
     return false;
 }
+
+//bool DeleteRecord(List* list, char* id) {
+
+
+//}
+
+
+bool SearchStudent(List* list, char* id, LibStudent& stu) {
+    char code[10];
+    cout << "Please Enter the Student id you would like to search: ";
+    cin >> code;
+
+    Node* cur = list->head; 
+
+    while (cur != NULL)
+    {
+        if (std::strcmp(cur->item.id,code) == 0) // Compare student ID in linked list with input of user
+        {
+            stu = cur->item; // Copy the found student data to the 'stu' reference
+            return true;
+        }
+        else
+            cur = cur->next; // Move to the next node in the list
+    }
+    return false;
+}
+
+
+
+    
+
+
+
+
 
