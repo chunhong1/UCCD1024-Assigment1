@@ -3,9 +3,11 @@
 #include	<cstdio>
 #include    <fstream>
 #include    <string>
+#include    <iomanip>
 #include	"List.h"
 #include    "LibStudent.h"
 #include    "LibBook.h"
+
 
 using namespace std;
 
@@ -14,51 +16,91 @@ const string STUDENT_INFO_FILE = "student.txt";
 //function prototype
 bool ReadFile(string, List*);
 bool isDuplicate(List* list, LibStudent& student);
+int menu();
+void center(string);
 bool DeleteRecord(List*, char*);
+
 bool Display(List, int, int);
 bool InsertBook(string, List*);
 bool SearchStudent(List*, char* id, LibStudent&);
 bool computeAndDisplayStatistics(List*);
 bool printStuWithSameBook(List*, char*);
 bool displayWarnedStudent(List*, List*, List*);
-int menu();
-
 
 
 int main() {
     List studentList; // Create an instance of the List class
     char id[10];
     LibStudent stu;
- 
+    int choice;
+    bool stop = false;
+        ReadFile(STUDENT_INFO_FILE, &studentList);
+        do {
+            choice = menu();
+            switch (choice) {
+            case 1:
+                if (ReadFile(STUDENT_INFO_FILE, &studentList)) {
+                    cout << "Data successfully read and stored in the list." << endl;
+                    cout << studentList.count << endl;
+                }
+                else {
+                    cout << "Failed to read data or encountered an error." << endl;
+                }
+                system("pause");
+                break;
+            case 2:
+              
+                system("pause");
+                break;
+            case 3:
+                if (SearchStudent(&studentList, id, stu)) {
+                    cout << "Student Found!" << endl << endl;
+                    cout << "STUDENT INFORMATION" << endl;
+                    cout << "ID:" << stu.id << endl;
+                    cout << "NAME:" << stu.name << endl;
+                    cout << "Course:" << stu.course << endl;
+                    cout << "Phone No:" << stu.phone_no << endl;
+                }
+                else {
+                    cout << "Student Not Found." << endl;
+                }
+                system("pause");
+                break;
+            case 4:
 
-    if (ReadFile(STUDENT_INFO_FILE, &studentList)) {
-        cout << "Data successfully read and stored in the list." << endl;
-        cout << studentList.count;
-    }
-    else {
-        cout << "Failed to read data or encountered an error." << endl;
-    }
+                break;
+            case 5:
 
-    cout << endl;
+                break;
 
-    if (SearchStudent(&studentList, id, stu)) {
-      cout << "Student Found!" << endl << endl;
-      cout << "STUDENT INFORMATION" << endl;
-      cout << "ID: " << stu.id << endl;
-      cout << "NAME: " << stu.name << endl;
-      cout << "Course:" << stu.course << endl;
-      cout << "Phone No:" << stu.phone_no << endl;
-   
-    }
-    else {
-       cout << "Student Not Found." << endl;
-    }
-    
+            case 6:
+
+                break;
+            case 7:
+
+                break;
+            case 8:
+
+                break;
+            case 9:
+                stop = true;
+                break;
+            default:
+                cout << "Invalid Input!\a" << endl;
+                system("pause");
+
+            }
+            cin.clear();
+            cin.ignore();
+            cout << endl;
+            
+        } while (!stop);
 
 	cout << "\n\n";
-	system("pause");
-	return 0;
+    system("pause");
+    return 0;
 }
+
 
 // Read student information from the file "student.txt" and store it in the linked list
 bool ReadFile(string filename, List* list) {
@@ -144,7 +186,6 @@ bool isDuplicate(List* list, LibStudent& student) {
 
 
 
-
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
     char code[10];
     cout << "Please Enter the Student ID you would like to search: ";
@@ -165,10 +206,33 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
     return false;
 }
 
+void center(string string) {
+    const int WIDTH = 115;
+    int space = (WIDTH - string.length()) / 2;
+    cout << setw(space + string.length()) << string << endl;
+}
 
-    
+int menu(){
+    int operation;
+    system("cls");
+    center("UTAR Library System?");
+    center("Faculty of Information and Communication Technology");
+    center("Main Menu");
+    center("Please select an option:          ");
+    center("1. Read File                      ");
+    center("2. Delete Record                  ");
+    center("3. Search Student                 ");
+    center("4. Insert Book                    ");
+    center("5. Display Output                 ");
+    center("6. Compute and Display Statistics ");
+    center("7. Student with Same Book         ");
+    center("8. Display Warned Student         ");
+    center("9. Exit                           ");
+    cout << "Enter an operation: ";
+    cin >> operation;
 
-
+    return operation;
+}
 
 
 
