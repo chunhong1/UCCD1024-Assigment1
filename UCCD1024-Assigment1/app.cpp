@@ -54,7 +54,7 @@ int main() {
        cout << "Student Not Found." << endl;
     }
     cout << "Welcome!" << endl;
-    cout << "S" << endl;
+    cout << "H" << endl;
     
 
 	cout << "\n\n";
