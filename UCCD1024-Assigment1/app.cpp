@@ -53,9 +53,7 @@ int main() {
     else {
        cout << "Student Not Found." << endl;
     }
-    cout << "Welcome!" << endl;
-    cout << "H" << endl;
-    cout << endl;
+    
 
 	cout << "\n\n";
 	system("pause");
