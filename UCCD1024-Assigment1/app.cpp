@@ -49,17 +49,22 @@ int main() {
                 system("pause");
                 break;
             case 2:
-              
+                
+                if (DeleteRecord(&studentList, id)) {
+                    cout << "Student Record has been removed...." << endl;;
+                }
+                else {
+                    cout << "Failed to remove student record!!" << endl;
+                }
+
                 system("pause");
                 break;
             case 3:
+                
                 if (SearchStudent(&studentList, id, stu)) {
-                    cout << "Student Found!" << endl << endl;
-                    cout << "STUDENT INFORMATION" << endl;
-                    cout << "ID:" << stu.id << endl;
-                    cout << "NAME:" << stu.name << endl;
-                    cout << "Course:" << stu.course << endl;
-                    cout << "Phone No:" << stu.phone_no << endl;
+                    cout << "Student Found" << endl;
+                    cout << "Student Information:" << endl;
+                    stu.print(cout);
                 }
                 else {
                     cout << "Student Not Found." << endl;
@@ -195,7 +200,7 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 
     while (cur != NULL)
     {
-        if (std::strcmp(cur->item.id,code) == 0) // Compare student ID in linked list with input of user
+        if (strcmp(cur->item.id,code) == 0) // Compare student ID in linked list with input of user
         {
             stu = cur->item; // Copy the found student data to the 'stu' reference
             return true;
@@ -232,6 +237,35 @@ int menu(){
     cin >> operation;
 
     return operation;
+}
+
+bool DeleteRecord(List* list, char* id) {
+    char del[10];
+    cout << "Please Enter the Student ID you would like to delete: ";
+    cin >> del;
+    
+   
+    int position=1;
+    Node* cur = list->head;
+    type temp;
+
+    while (cur != NULL) {
+        if (strcmp(cur->item.id, del) == 0) {
+            if (list->get(position, temp)) {
+                list->remove(position);
+                return true;
+            }
+            else {
+                return false; // Error occurred while trying to get the node at the position
+            }
+        }
+        else {
+            cur = cur->next;
+            position++;
+        }
+    }
+
+     return false;
 }
 
 
