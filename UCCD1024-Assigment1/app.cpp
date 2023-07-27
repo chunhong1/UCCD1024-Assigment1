@@ -14,19 +14,19 @@ using namespace std;
 //constant
 const string STUDENT_INFO_FILE = "student.txt";
 //function prototype
-bool ReadFile(string, List*);
 bool isDuplicate(List* list, LibStudent& student);
-int menu();
 void center(string);
-bool DeleteRecord(List*, char*);
 
+
+bool ReadFile(string, List*);
+bool DeleteRecord(List*, char*);
+bool SearchStudent(List*, char* id, LibStudent&);
 bool Display(List, int, int);
 bool InsertBook(string, List*);
-bool SearchStudent(List*, char* id, LibStudent&);
 bool computeAndDisplayStatistics(List*);
 bool printStuWithSameBook(List*, char*);
 bool displayWarnedStudent(List*, List*, List*);
-
+int menu();
 
 int main() {
     List studentList; // Create an instance of the List class
@@ -41,7 +41,7 @@ int main() {
             case 1:
                 if (ReadFile(STUDENT_INFO_FILE, &studentList)) {
                     cout << "Data successfully read and stored in the list." << endl;
-                    cout << studentList.count << endl;
+                    cout << studentList.count <<" records have been successfully read."<< endl;
                 }
                 else {
                     cout << "Failed to read data or encountered an error." << endl;
@@ -105,8 +105,39 @@ int main() {
     system("pause");
     return 0;
 }
+//******************************************************(Additional Functions)************************************************
+//function to place words in the center of output
+void center(string string) {
+    const int WIDTH = 115;
+    int space = (WIDTH - string.length()) / 2;
+    cout << setw(space + string.length()) << string << endl;
+}
+
+    // function to check if a student record is a duplicate in the list
+    bool isDuplicate(List * list, LibStudent & student) {
+
+        Node* cur;
+
+        //list will not duplicate if it is empty
+        if (list->empty())
+        {
+            return false;
+        }
+
+        cur = list->head; //start traversing from the first node
+
+        while (cur != NULL)
+        {
+            if (cur->item.compareName2(student))
+                return true;
+            else
+                cur = cur->next; //move to next node in the list
+        }
+        return false;
+    }
 
 
+//*****************************************************************(1)*******************************************************
 // Read student information from the file "student.txt" and store it in the linked list
 bool ReadFile(string filename, List* list) {
     ifstream in;
@@ -165,42 +196,52 @@ bool ReadFile(string filename, List* list) {
     return true;
 }
 
-// function to check if a student record is a duplicate in the list
-bool isDuplicate(List* list, LibStudent& student) { 
 
-    Node* cur;
 
-    //list will not duplicate if it is empty
-    if (list->empty())
-    {
-        return false;
+
+//*****************************************************************(2)***************************************************
+//Delete record for existing student through input of student ID
+bool DeleteRecord(List* list, char* id) {
+    char del[10];
+    cout << "Please Enter the Student ID you would like to delete: ";//Prompt user to input student id
+    cin >> del;
+
+
+    int position = 1;
+    Node* cur = list->head;//Start traversing from first node
+    type temp;
+
+    while (cur != NULL) {
+        if (strcmp(cur->item.id, del) == 0) { //Compare student ID with user input
+            if (list->get(position, temp)) {//Use the get function to obtain intended linked list
+                list->remove(position);//Use function to remove link list
+                return true;
+            }
+        }
+        else {  // Move to the next node in the list
+            cur = cur->next;
+            position++;
+        }
     }
 
-    cur = list->head; //start traversing from the first node
-    
-    while (cur != NULL)
-    {
-        if (cur->item.compareName2(student))
-            return true;
-        else
-            cur = cur->next; //move to next node in the list
-    }
     return false;
 }
 
 
 
+//*************************************************************(3)****************************************************
 
+//Search for student through input of student ID
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
     char code[10];
-    cout << "Please Enter the Student ID you would like to search: ";
+    cout << "Please Enter the Student ID you would like to search: ";//prompt user to input student ID
     cin >> code;
 
-    Node* cur = list->head; 
+    Node* cur = list->head;// Start traversing from first node
 
     while (cur != NULL)
     {
-        if (strcmp(cur->item.id,code) == 0) // Compare student ID in linked list with input of user
+        if (strcmp(cur->item.id, code) == 0) // Compare student ID in linked list with input of user
         {
             stu = cur->item; // Copy the found student data to the 'stu' reference
             return true;
@@ -211,18 +252,14 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
     return false;
 }
 
-void center(string string) {
-    const int WIDTH = 115;
-    int space = (WIDTH - string.length()) / 2;
-    cout << setw(space + string.length()) << string << endl;
-}
 
-int menu(){
+//*********************************************(9)**************************************************//
+int menu() {
     int operation;
     system("cls");
     center("UTAR Library System?");
     center("Faculty of Information and Communication Technology");
-    center("Main Menu");
+    center("Menu");
     center("Please select an option:          ");
     center("1. Read File                      ");
     center("2. Delete Record                  ");
@@ -233,40 +270,8 @@ int menu(){
     center("7. Student with Same Book         ");
     center("8. Display Warned Student         ");
     center("9. Exit                           ");
-    cout << "Enter an operation: ";
+    cout << "Enter your choice: ";
     cin >> operation;
 
     return operation;
 }
-
-bool DeleteRecord(List* list, char* id) {
-    char del[10];
-    cout << "Please Enter the Student ID you would like to delete: ";
-    cin >> del;
-    
-   
-    int position=1;
-    Node* cur = list->head;
-    type temp;
-
-    while (cur != NULL) {
-        if (strcmp(cur->item.id, del) == 0) {
-            if (list->get(position, temp)) {
-                list->remove(position);
-                return true;
-            }
-            else {
-                return false; // Error occurred while trying to get the node at the position
-            }
-        }
-        else {
-            cur = cur->next;
-            position++;
-        }
-    }
-
-     return false;
-}
-
-
-
