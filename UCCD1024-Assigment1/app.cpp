@@ -13,6 +13,7 @@ using namespace std;
 
 //constant
 const string STUDENT_INFO_FILE = "student.txt";
+const string BOOK_FILE = "book.txt";
 //function prototype
 bool isDuplicate(List* list, LibStudent& student);
 void center(string);
@@ -21,8 +22,8 @@ void center(string);
 bool ReadFile(string, List*);
 bool DeleteRecord(List*, char*);
 bool SearchStudent(List*, char* id, LibStudent&);
+bool InsertBook(string, List*);    
 bool Display(List, int, int);
-bool InsertBook(string, List*);
 bool computeAndDisplayStatistics(List*);
 bool printStuWithSameBook(List*, char*);
 bool displayWarnedStudent(List*, List*, List*);
@@ -65,6 +66,8 @@ int main() {
                     cout << "Student Found" << endl;
                     cout << "Student Information:" << endl;
                     stu.print(cout);
+                    cout <<"Total Books: "<< stu.totalbook;
+                    cout << endl;
                 }
                 else {
                     cout << "Student Not Found." << endl;
@@ -72,7 +75,13 @@ int main() {
                 system("pause");
                 break;
             case 4:
-
+                if (InsertBook(BOOK_FILE, &studentList)) {
+                    cout << "Books inserted successfully to student list" << endl;
+                }
+                else {
+                    cout << "An error has occured" << endl;
+                }
+                system("pause");
                 break;
             case 5:
 
@@ -251,9 +260,57 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
     }
     return false;
 }
+//*********************************************(4)*************************************************
+bool InsertBook(string filename, List* list) {
+
+    ifstream in;
+    char annon[256];
+    LibBook book;
+    LibStudent student;
+    Node* cur = list->head;
+    char readID[10];
+
+    in.open(filename);
+
+   
+  
+    //return false if the file is not found
+    if (!in)
+    {
+        return false;
+    }
+
+    while (!in.eof())
+    {
+        in >> readID;
+
+        for (int j = 0; j < 8; j++) {
+            in >> annon;
+        } //here supposed to read the rest of item in book.txt and store in book linked list
+
+        Node* cur = list->head;
+
+        while (cur != NULL)
+        {
+            if (strcmp(cur->item.id,readID ) == 0) // Compare student ID in linked list with student id in book.txt
+            {
+                cur->item.totalbook++;
+                break;
+                
+            }
+            else
+                cur = cur->next; // Move to the next node in the list
+        }
+
+        
+ 
+    }
+    in.close();
+    return true;
+}
 
 
-//*********************************************(9)**************************************************//
+//*********************************************(9)**************************************************
 int menu() {
     int operation;
     system("cls");
