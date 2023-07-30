@@ -508,8 +508,7 @@ bool computeAndDisplayStatistics(List* list) {
 
 
     Node* cur = list->head;
-    while (cur != NULL) {
-
+    while (cur != nullptr) {
         // Compute statistics for each course based on the data in the current node
         if (strcmp(cur->item.course, "CS") == 0) {
             numStudentsCS++;
@@ -524,8 +523,24 @@ bool computeAndDisplayStatistics(List* list) {
             totalOverdueFineIA += cur->item.total_fine; // Accumulate total overdue fine for IA
         }
         else if (strcmp(cur->item.course, "IB") == 0) {
-            // Similar calculations for other courses (IB, CN, CT) can be added here
+            numStudentsIB++;
+            totalBooksBorrowedIB += cur->item.totalbook;
+            totalOverdueBooksIB += cur->item.totalbook; // Accumulate total overdue books for IB
+            totalOverdueFineIB += cur->item.total_fine; // Accumulate total overdue fine for IB
         }
+        else if (strcmp(cur->item.course, "CT") == 0) {
+            numStudentsCT++;
+            totalBooksBorrowedCT += cur->item.totalbook;
+            totalOverdueBooksCT += cur->item.totalbook; // Accumulate total overdue books for CT
+            totalOverdueFineCT += cur->item.total_fine; // Accumulate total overdue fine for CT
+        }
+        else if (strcmp(cur->item.course, "CN") == 0) {
+            numStudentsCN++;
+            totalBooksBorrowedCN += cur->item.totalbook;
+            totalOverdueBooksCN += cur->item.totalbook; // Accumulate total overdue books for CN
+            totalOverdueFineCN += cur->item.total_fine; // Accumulate total overdue fine for CN
+        }
+
         // Move to the next node in the list
         cur = cur->next;
     }
@@ -534,8 +549,9 @@ bool computeAndDisplayStatistics(List* list) {
     cout << "Course\tNumber of Students\tTotal Books Borrowed\tTotal Overdue Books\tTotal Overdue Fine (RM)" << endl;
     cout << "CS\t" << numStudentsCS << "\t\t\t" << totalBooksBorrowedCS << "\t\t\t" << totalOverdueBooksCS << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCS << endl;
     cout << "IA\t" << numStudentsIA << "\t\t\t" << totalBooksBorrowedIA << "\t\t\t" << totalOverdueBooksIA << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineIA << endl;
-    // Similar lines for other courses (IB, CN, CT) can be added here
-
+    cout << "IB\t" << numStudentsIB << "\t\t\t" << totalBooksBorrowedIB << "\t\t\t" << totalOverdueBooksIB << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineIB << endl;
+    cout << "CT\t" << numStudentsCT << "\t\t\t" << totalBooksBorrowedCT << "\t\t\t" << totalOverdueBooksCT << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCT << endl;
+    cout << "CN\t" << numStudentsCN << "\t\t\t" << totalBooksBorrowedCN << "\t\t\t" << totalOverdueBooksCN << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCN << endl;
 
     return true;
 }
