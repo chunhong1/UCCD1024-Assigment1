@@ -23,7 +23,7 @@ bool ReadFile(string, List*);
 bool DeleteRecord(List*, char*);
 bool SearchStudent(List*, char* id, LibStudent&);
 bool InsertBook(string, List*);    
-bool Display(List, int, int);
+bool Display(List*, int, int);
 bool computeAndDisplayStatistics(List*);
 bool printStuWithSameBook(List*, char*);
 bool displayWarnedStudent(List*, List*, List*);
@@ -33,6 +33,7 @@ int main() {
     List studentList; // Create an instance of the List class
     char id[10];
     LibStudent stu;
+	int detail, source;
     int choice;
     bool stop = false;
         ReadFile(STUDENT_INFO_FILE, &studentList);
@@ -84,7 +85,7 @@ int main() {
                 system("pause");
                 break;
             case 5:
-
+				
                 break;
 
             case 6:
@@ -144,6 +145,8 @@ void center(string string) {
         }
         return false;
     }
+
+
 
 
 //*****************************************************************(1)*******************************************************
@@ -262,52 +265,196 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 }
 //*********************************************(4)*************************************************
 bool InsertBook(string filename, List* list) {
+	ifstream file(filename);
+	Node* cur = list->head;
+	LibBook book;
+	LibStudent student;
+	char author[256], temp[256];
+	char name[256];
+	char borrow[256], due[256];
+	char line[50];
+	char day[20], month[20], year[20];
+	int x = 0, y = 0, i = 0;
+	int a = 0, b = 0;
+	char id[20];
+	int current = 0;
+	int dueDate;
+	Date date;
+	
+	if (!file)
+	{
+		cout << "Cannot open the " << filename << endl;
+		return false;
+	}
+	else
+	{
+		while (!file.eof())
+		{
+			file >> id;
+			file >> author;
+			file >> book.title;
+			file >> book.publisher;
+			file >> book.ISBN;
+			file >> book.yearPublished;
+			file >> book.callNum;
+			file >> borrow;
+			file >> due;
+			book.fine = 0;
+			x = 0; y = 0;
+			char* ptr = author;
+			while (*ptr != '\0') {
+				if (*ptr == '_') {
+					*ptr = ' ';
+				}
+				ptr++;
+			}
+			char* ptr1 = book.title;
+			while (*ptr1 != '\0') {
+				if (*ptr1 == '_') {
+					*ptr1 = ' ';
+				}
+				ptr1++;
+			}
+			char* ptr3 = book.publisher;
+			while (*ptr3 != '\0') {
+				if (*ptr3 == '_') {
+					*ptr3 = ' ';
+				}
+				ptr3++;
+			}
+			while (author[i] != '\0') {
+				book.author[y] = new char[256];
+				strcpy(book.author[y], " ");
 
-    ifstream in;
-    char annon[256];
-    LibBook book;
-    LibStudent student;
-    Node* cur = list->head;
-    char readID[10];
+				if (author[i] != '/') {
+					temp[x] = author[i];
+					x++;
+				}
 
-    in.open(filename);
+				if (author[i] == '/' || author[i + 1] == '\0') {
+					temp[x] = '\0';
+					x = 0;
+					book.author[y] = temp;
+					y++;
+					strcpy(temp, "");
+				}
 
-   
-  
-    //return false if the file is not found
-    if (!in)
-    {
-        return false;
-    }
+				i++;
+			}
 
-    while (!in.eof())
-    {
-        in >> readID;
+			i = 0;
+			a = 0;
+			b = 0;
 
-        for (int j = 0; j < 8; j++) {
-            in >> annon;
-        } //here supposed to read the rest of item in book.txt and store in book linked list
+			// Loop to extract day, month, and year from the 'borrow' string
+			while (borrow[i] != '\0') {
+				if (borrow[i] != '/') {
+					if (a == 0) {
+						day[b] = borrow[i];
+						b++;
+					}
+					if (a == 1) {
+						month[b] = borrow[i];
+						b++;
+					}
+					if (a == 2) {
+						year[b] = borrow[i];
+						b++;
+					}
+				}
 
-        Node* cur = list->head;
+				if (borrow[i] == '/' || borrow[i + 1] == '\0') {
+					if (a == 0) {
+						day[b] = '\0';
+						book.borrow.day = atoi(day);
+						strcpy(day, "");
+					}
+					if (a == 1) {
+						month[b] = '\0';
+						book.borrow.month = atoi(month);
+						strcpy(month, "");
+					}
+					if (a == 2) {
+						year[b] = '\0';
+						book.borrow.year = atoi(year);
+						strcpy(year, "");
+					}
+					b = 0;
+					a++;
+				}
 
-        while (cur != NULL)
-        {
-            if (strcmp(cur->item.id,readID ) == 0) // Compare student ID in linked list with student id in book.txt
-            {
-                cur->item.totalbook++;
-                break;
-                
-            }
-            else
-                cur = cur->next; // Move to the next node in the list
-        }
+				i++;
+			}
 
-        
- 
-    }
-    in.close();
-    return true;
+			i = 0;
+			a = 0;
+			b = 0;
+
+			// Loop to extract day, month, and year from the 'due' string
+			while (due[i] != '\0') {
+				if (due[i] != '/') {
+					if (a == 0) {
+						day[b] = due[i];
+						b++;
+					}
+					if (a == 1) {
+						month[b] = due[i];
+						b++;
+					}
+					if (a == 2) {
+						year[b] = due[i];
+						b++;
+					}
+				}
+
+				if (due[i] == '/' || due[i + 1] == '\0') {
+					if (a == 0) {
+						day[b] = '\0';
+						book.due.day = atoi(day);
+						strcpy(day, "");
+					}
+					if (a == 1) {
+						month[b] = '\0';
+						book.due.month = atoi(month);
+						strcpy(month, "");
+					}
+					if (a == 2) {
+						year[b] = '\0';
+						book.due.year = atoi(year);
+						strcpy(year, "");
+					}
+					b = 0;
+					a++;
+				}
+
+				i++;
+			}
+
+			dueDate = book.due.year, book.due.month,book.due.day;
+			if ((current - dueDate) * 0.5 > 0)
+			{
+				book.fine = ((current - dueDate) * 0.5);
+			}
+			for (int i = 1; i <= list->count + 1; i++)
+			{
+				list->get(i, student);
+				if (strcmp(student.id, id) == 0)
+				{
+					//insert book to student
+					student.book[student.totalbook] = book;
+					student.totalbook++;
+					student.calculateTotalFine(); //calcute total fine
+					list->set(i, student);
+				}
+				else
+					continue;
+			}
+		}
+		file.close();
+		return true;
+	}
 }
+
 
 
 //*********************************************(9)**************************************************
