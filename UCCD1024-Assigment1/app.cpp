@@ -265,7 +265,7 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 }
 //*********************************************(4)*************************************************
 bool InsertBook(string filename, List* list) {
-	ifstream file(filename);
+	ifstream in(filename);
 	Node* cur = list->head;
 	LibBook book;
 	LibStudent student;
@@ -276,29 +276,29 @@ bool InsertBook(string filename, List* list) {
 	char day[20], month[20], year[20];
 	int x = 0, y = 0, i = 0;
 	int a = 0, b = 0;
-	char id[20];
+	char readID[10];
 	int current = 0;
 	int dueDate;
 	Date date;
 	
-	if (!file)
+	if (!in)
 	{
 		cout << "Cannot open the " << filename << endl;
 		return false;
 	}
 	else
 	{
-		while (!file.eof())
+		while (!in.eof())
 		{
-			file >> id;
-			file >> author;
-			file >> book.title;
-			file >> book.publisher;
-			file >> book.ISBN;
-			file >> book.yearPublished;
-			file >> book.callNum;
-			file >> borrow;
-			file >> due;
+			in >> readID;
+			in >> author;
+			in >> book.title;
+			in >> book.publisher;
+            in >> book.ISBN;
+            in >> book.yearPublished;   
+			in >> book.callNum;
+			in >> borrow;
+			in >> due;
 			book.fine = 0;
 			x = 0; y = 0;
 			char* ptr = author;
@@ -438,7 +438,7 @@ bool InsertBook(string filename, List* list) {
 			for (int i = 1; i <= list->count + 1; i++)
 			{
 				list->get(i, student);
-				if (strcmp(student.id, id) == 0)
+				if (strcmp(student.id, readID) == 0)
 				{
 					//insert book to student
 					student.book[student.totalbook] = book;
@@ -450,7 +450,7 @@ bool InsertBook(string filename, List* list) {
 					continue;
 			}
 		}
-		file.close();
+		in.close();
 		return true;
 	}
 }
