@@ -41,7 +41,7 @@ int main() {
             case 1:
                 if (ReadFile(STUDENT_INFO_FILE, &studentList)) {
                     cout << "Data successfully read and stored in the list." << endl;
-                    cout << studentList.count <<" records have been successfully read."<< endl;
+                    cout << studentList.count << " records have been successfully read." << endl;
                 }
                 else {
                     cout << "Failed to read data or encountered an error." << endl;
@@ -49,7 +49,7 @@ int main() {
                 system("pause");
                 break;
             case 2:
-                
+
                 if (DeleteRecord(&studentList, id)) {
                     cout << "Student Record has been removed...." << endl;;
                 }
@@ -60,7 +60,7 @@ int main() {
                 system("pause");
                 break;
             case 3:
-                
+
                 if (SearchStudent(&studentList, id, stu)) {
                     cout << "Student Found" << endl;
                     cout << "Student Information:" << endl;
@@ -80,7 +80,7 @@ int main() {
 
             case 6:
 
-                break;
+            
             case 7:
 
                 break;
@@ -140,7 +140,10 @@ void center(string string) {
 //*****************************************************************(1)*******************************************************
 // Read student information from the file "student.txt" and store it in the linked list
 bool ReadFile(string filename, List* list) {
+  
     ifstream in;
+    LibStudent stu;
+
     char text[256];
 
     LibStudent newStudent;
@@ -184,6 +187,7 @@ bool ReadFile(string filename, List* list) {
 
         //assign phone number
         in >> newStudent.phone_no;
+
 
         // Check if the student is a duplicate, if not then insert student into the list
         if (!isDuplicate(list, newStudent)) 
@@ -251,6 +255,7 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
     }
     return false;
 }
+
 
 
 //*********************************************(9)**************************************************//
