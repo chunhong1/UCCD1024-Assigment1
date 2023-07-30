@@ -32,3 +32,38 @@ Student Id = 1310983
 Name = Audrey Chan
 course = IA
 Phone Number = 521-3879
+
+Student Id = 1323451
+Name = Watermelon Chan
+course = CN
+Phone Number = 411-3312
+
+Student Id = 1222345
+Name = Coconut Chin
+course = CN
+Phone Number = 901-3239
+
+Student Id = 1490943
+Name = Mario 
+course = CT
+Phone Number = 234-654
+
+Student Id = 1387654
+Name = Donkey Kong
+course = CT
+Phone Number = 123-3214
+
+Student Id = 1274543
+Name = Yilong Ma
+course = CS
+Phone Number = 521-3879
+
+Student Id = 1345321
+Name = Elon Musk
+course = IB
+Phone Number = 521-3879
+
+Student Id = 1198887
+Name = Gigi Ong
+course = IA
+Phone Number = 321-9999
