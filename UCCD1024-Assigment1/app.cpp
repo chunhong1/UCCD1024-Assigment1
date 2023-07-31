@@ -301,6 +301,7 @@ bool InsertBook(string filename, List* list) {
     char readID[10];
     int current = 0;
     int dueDate;
+    int componentValue = 0;
     Date date;
 
     if (!in)
@@ -347,7 +348,7 @@ bool InsertBook(string filename, List* list) {
             }
             while (author[i] != '\0') {
                 book.author[y] = new char[256];
-                strcpy(book.author[y], " ");
+                strcpy(book.author[y], "	");
 
                 if (author[i] != '/') {
                     temp[x] = author[i];
@@ -370,89 +371,44 @@ bool InsertBook(string filename, List* list) {
             b = 0;
 
             // Loop to extract day, month, and year from the 'borrow' string
-            while (borrow[i] != '\0') {
+            for (int i = 0; borrow[i] != '\0'; i++) {
                 if (borrow[i] != '/') {
-                    if (a == 0) {
-                        day[b] = borrow[i];
-                        b++;
-                    }
-                    if (a == 1) {
-                        month[b] = borrow[i];
-                        b++;
-                    }
-                    if (a == 2) {
-                        year[b] = borrow[i];
-                        b++;
-                    }
+                    componentValue = componentValue * 10 + (borrow[i] - '0');
                 }
 
                 if (borrow[i] == '/' || borrow[i + 1] == '\0') {
                     if (a == 0) {
-                        day[b] = '\0';
-                        book.borrow.day = atoi(day);
-                        strcpy(day, "");
+                        book.borrow.day = componentValue;
                     }
-                    if (a == 1) {
-                        month[b] = '\0';
-                        book.borrow.month = atoi(month);
-                        strcpy(month, "");
+                    else if (a == 1) {
+                        book.borrow.month = componentValue;
                     }
-                    if (a == 2) {
-                        year[b] = '\0';
-                        book.borrow.year = atoi(year);
-                        strcpy(year, "");
+                    else if (a == 2) {
+                        book.borrow.year = componentValue;
                     }
-                    b = 0;
+                    componentValue = 0;
                     a++;
                 }
-
-                i++;
             }
 
-            i = 0;
-            a = 0;
-            b = 0;
-
-            // Loop to extract day, month, and year from the 'due' string
-            while (due[i] != '\0') {
+            for (int i = 0; due[i] != '\0'; i++) {
                 if (due[i] != '/') {
-                    if (a == 0) {
-                        day[b] = due[i];
-                        b++;
-                    }
-                    if (a == 1) {
-                        month[b] = due[i];
-                        b++;
-                    }
-                    if (a == 2) {
-                        year[b] = due[i];
-                        b++;
-                    }
+                    componentValue = componentValue * 10 + (due[i] - '0');
                 }
-
                 if (due[i] == '/' || due[i + 1] == '\0') {
-                    if (a == 0) {
-                        day[b] = '\0';
-                        book.due.day = atoi(day);
-                        strcpy(day, "");
+                    if (b == 0) {
+                        book.due.day = componentValue;
                     }
-                    if (a == 1) {
-                        month[b] = '\0';
-                        book.due.month = atoi(month);
-                        strcpy(month, "");
+                    else if (b == 1) {
+                        book.due.month = componentValue;
                     }
-                    if (a == 2) {
-                        year[b] = '\0';
-                        book.due.year = atoi(year);
-                        strcpy(year, "");
+                    else if (b == 2) {
+                        book.due.year = componentValue;
                     }
-                    b = 0;
-                    a++;
+                    componentValue = 0;
+                    b++;
                 }
-
-                i++;
             }
-
             dueDate = book.due.year, book.due.month,book.due.day;
             if ((current - dueDate) * 0.5 > 0)
             {
