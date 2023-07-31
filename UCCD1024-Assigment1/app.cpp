@@ -241,8 +241,8 @@ bool DeleteRecord(List* list, char* id) {
 
 
 
-//*************************************************************(3)****************************************************
 
+//*************************************************************(3)****************************************************
 //Search for student through input of student ID
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
     char code[10];
@@ -263,6 +263,7 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
     }
     return false;
 }
+
 //*********************************************(4)*************************************************
 bool InsertBook(string filename, List* list) {
 	ifstream in(filename);
@@ -301,6 +302,7 @@ bool InsertBook(string filename, List* list) {
 			in >> due;
 			book.fine = 0;
 			x = 0; y = 0;
+            //to ignore the character '_'
 			char* ptr = author;
 			while (*ptr != '\0') {
 				if (*ptr == '_') {
