@@ -299,8 +299,8 @@ bool InsertBook(string filename, List* list) {
     int x = 0, y = 0, i = 0;
     int a = 0, b = 0;
     char readID[10];
-    int current = 0;
-    int dueDate;
+    int current = (2020 * 366) + (3 * 31) + 29;
+    int dueDate = 0;
     int componentValue = 0;
     Date date;
 
@@ -360,7 +360,7 @@ bool InsertBook(string filename, List* list) {
                     x = 0;
                     book.author[y] = temp;
                     y++;
-                    strcpy(temp, "");
+                    strcpy(temp, "	");
                 }
 
                 i++;
@@ -409,7 +409,13 @@ bool InsertBook(string filename, List* list) {
                     b++;
                 }
             }
-            dueDate = book.due.year, book.due.month,book.due.day;
+
+            if (book.due.month == 2) {
+                dueDate = (book.due.year * 366) + (book.due.month * 32) + (book.due.day);
+            }
+            else if (book.due.month == 3) {
+                dueDate = (book.due.year * 366) + (book.due.month * 31) + (book.due.day);
+            }
             if ((current - dueDate) * 0.5 > 0)
             {
                 book.fine = ((current - dueDate) * 0.5);
