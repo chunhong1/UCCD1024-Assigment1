@@ -17,7 +17,7 @@ struct List
 	bool insert(int, type);  // insert item according to the specified position
 	bool remove(int);
 	bool insert(type newItem); //insert item in ascending order
-
+	
 };
 
 

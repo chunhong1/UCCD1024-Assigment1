@@ -43,7 +43,7 @@ int main() {
             case 1:
                 if (ReadFile(STUDENT_INFO_FILE, &studentList)) {
                     cout << "Data successfully read and stored in the list." << endl;
-                    cout << studentList.count <<" records have been successfully read."<< endl;
+                    cout << studentList.count << " records have been successfully read." << endl;
                 }
                 else {
                     cout << "Failed to read data or encountered an error." << endl;
@@ -51,7 +51,7 @@ int main() {
                 system("pause");
                 break;
             case 2:
-                
+
                 if (DeleteRecord(&studentList, id)) {
                     cout << "Student Record has been removed...." << endl;;
                 }
@@ -62,7 +62,7 @@ int main() {
                 system("pause");
                 break;
             case 3:
-                
+
                 if (SearchStudent(&studentList, id, stu)) {
                     cout << "Student Found" << endl;
                     cout << "Student Information:" << endl;
@@ -89,9 +89,27 @@ int main() {
                 break;
 
             case 6:
+                if (computeAndDisplayStatistics(&studentList)) {
+                    cout << "Statistics computed and displayed successfully." << endl;
+                }
+                else {
+                    cout << "Empty list. Unable to compute statistics." << endl;
+                }
+                system("pause");
+                break;
+                {
+                    computeAndDisplayStatistics(&studentList);
+                }
 
                 break;
+
+            
             case 7:
+                char callNum[20];
+                cout << "Enter the call number of the book: ";
+                cin >> callNum;
+                printStuWithSameBook(&studentList, callNum);
+                system("pause");
 
                 break;
             case 8:
@@ -152,7 +170,10 @@ void center(string string) {
 //*****************************************************************(1)*******************************************************
 // Read student information from the file "student.txt" and store it in the linked list
 bool ReadFile(string filename, List* list) {
+  
     ifstream in;
+    LibStudent stu;
+
     char text[256];
 
     LibStudent newStudent;
@@ -196,6 +217,7 @@ bool ReadFile(string filename, List* list) {
 
         //assign phone number
         in >> newStudent.phone_no;
+
 
         // Check if the student is a duplicate, if not then insert student into the list
         if (!isDuplicate(list, newStudent)) 
@@ -458,8 +480,144 @@ bool InsertBook(string filename, List* list) {
 }
 
 
+//*************************************************************(6)****************************************************
+bool computeAndDisplayStatistics(List* list) {
+    const string STUDENT_INFO_FILE = "student.txt";
+    const string STUDENT_BOOK_LIST_FILE = "student_booklist.txt";
 
+    ifstream inStudent(STUDENT_INFO_FILE);
+    ifstream inBook(STUDENT_BOOK_LIST_FILE);
+    char text[256];
+    LibStudent newStudent;
+    LibBook book;
+    int bookCount = 0;
+
+    if (!inStudent || !inBook) {
+        cout << "Failed to open one or both of the files." << endl;
+        return false;
+    }
+
+    if (list == NULL || list->empty()) {
+        cout << "Empty list. Unable to compute statistics." << endl;
+        return false;
+    }
+
+    // Initialize variables to hold statistics for each course
+    int numStudentsCS = 0, numStudentsIA = 0, numStudentsIB = 0, numStudentsCN = 0, numStudentsCT = 0;
+    int totalBooksBorrowedCS = 0, totalBooksBorrowedIA = 0, totalBooksBorrowedIB = 0, totalBooksBorrowedCN = 0, totalBooksBorrowedCT = 0;
+    int totalOverdueBooksCS = 0, totalOverdueBooksIA = 0, totalOverdueBooksIB = 0, totalOverdueBooksCN = 0, totalOverdueBooksCT = 0;
+    float totalOverdueFineCS = 0.00, totalOverdueFineIA = 0.00, totalOverdueFineIB = 0.00, totalOverdueFineCN = 0.00, totalOverdueFineCT = 0.00;
+
+
+    Node* cur = list->head;
+    while (cur != nullptr) {
+        // Compute statistics for each course based on the data in the current node
+        if (strcmp(cur->item.course, "CS") == 0) {
+            numStudentsCS++;
+            totalBooksBorrowedCS += cur->item.totalbook;
+            totalOverdueBooksCS += cur->item.totalbook; // Accumulate total overdue books for CS
+            totalOverdueFineCS += cur->item.total_fine; // Accumulate total overdue fine for CS
+        }
+        else if (strcmp(cur->item.course, "IA") == 0) {
+            numStudentsIA++;
+            totalBooksBorrowedIA += cur->item.totalbook;
+            totalOverdueBooksIA += cur->item.totalbook; // Accumulate total overdue books for IA
+            totalOverdueFineIA += cur->item.total_fine; // Accumulate total overdue fine for IA
+        }
+        else if (strcmp(cur->item.course, "IB") == 0) {
+            numStudentsIB++;
+            totalBooksBorrowedIB += cur->item.totalbook;
+            totalOverdueBooksIB += cur->item.totalbook; // Accumulate total overdue books for IB
+            totalOverdueFineIB += cur->item.total_fine; // Accumulate total overdue fine for IB
+        }
+        else if (strcmp(cur->item.course, "CT") == 0) {
+            numStudentsCT++;
+            totalBooksBorrowedCT += cur->item.totalbook;
+            totalOverdueBooksCT += cur->item.totalbook; // Accumulate total overdue books for CT
+            totalOverdueFineCT += cur->item.total_fine; // Accumulate total overdue fine for CT
+        }
+        else if (strcmp(cur->item.course, "CN") == 0) {
+            numStudentsCN++;
+            totalBooksBorrowedCN += cur->item.totalbook;
+            totalOverdueBooksCN += cur->item.totalbook; // Accumulate total overdue books for CN
+            totalOverdueFineCN += cur->item.total_fine; // Accumulate total overdue fine for CN
+        }
+
+        // Move to the next node in the list
+        cur = cur->next;
+    }
+
+    // Display computed statistics for each course in the specified table format
+    cout << "Course\tNumber of Students\tTotal Books Borrowed\tTotal Overdue Books\tTotal Overdue Fine (RM)" << endl;
+    cout << "CS\t" << numStudentsCS << "\t\t\t" << totalBooksBorrowedCS << "\t\t\t" << totalOverdueBooksCS << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCS << endl;
+    cout << "IA\t" << numStudentsIA << "\t\t\t" << totalBooksBorrowedIA << "\t\t\t" << totalOverdueBooksIA << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineIA << endl;
+    cout << "IB\t" << numStudentsIB << "\t\t\t" << totalBooksBorrowedIB << "\t\t\t" << totalOverdueBooksIB << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineIB << endl;
+    cout << "CT\t" << numStudentsCT << "\t\t\t" << totalBooksBorrowedCT << "\t\t\t" << totalOverdueBooksCT << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCT << endl;
+    cout << "CN\t" << numStudentsCN << "\t\t\t" << totalBooksBorrowedCN << "\t\t\t" << totalOverdueBooksCN << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCN << endl;
+
+    return true;
+}
+
+//**************************************************(7)*******************************************************
+bool printStuWithSameBook(List* list, char* callNum) {
+    const string STUDENT_INFO_FILE = "student.txt";
+    const string STUDENT_BOOK_LIST_FILE = "student_booklist.txt";
+
+    //The struct to defined for LibStudent and LibBook
+    struct Date {
+        int day;
+        int month;
+        int year;
+    };
+
+    ifstream in(STUDENT_BOOK_LIST_FILE);
+    Node* cur = list->head;
+    bool found = false;
+
+    if (!in) {
+        cout << "Cannot open the " << STUDENT_BOOK_LIST_FILE << endl;
+        return false;
+    }
+
+
+    int count = 0;
+
+    while (cur != NULL) {
+        for (int i = 0; i < cur->item.totalbook; i++) {
+            if (strcmp(cur->item.book[i].callNum, callNum) == 0) {
+                count++;
+                if (count == 1) {
+                    cout << "There are " << count << " student(s) that borrow the book with call number " << callNum << " as shown below:" << endl;
+                }
+                cout << endl;
+                cout << "Student Id = " << cur->item.id << endl;
+                cout << "Name = " << cur->item.name << endl;
+                cout << "Course = " << cur->item.course << endl;
+                cout << "Phone Number = " << cur->item.phone_no << endl;
+                cout << "Borrow Date: " << cur->item.book[i].borrow.day << "/" << cur->item.book[i].borrow.month << "/" << cur->item.book[i].borrow.year << endl;
+                cout << "Due Date: " << cur->item.book[i].due.day << "/" << cur->item.book[i].due.month << "/" << cur->item.book[i].due.year << endl;
+            }
+        }
+        cur = cur->next;
+    }
+
+    if (count == 0) {
+        cout << "No students found who borrowed the book with call number " << callNum << "." << endl;
+        return false;
+    }
+
+    return true;
+
+}
+
+
+
+
+<<<<<<< HEAD
+//*********************************************(9)**************************************************//
+=======
 //*********************************************(9)**************************************************
+>>>>>>> 485904772b31a9fc50f9f4d7e77b55aed5ee5314
 int menu() {
     int operation;
     system("cls");
