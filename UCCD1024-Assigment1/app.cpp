@@ -33,7 +33,7 @@ int main() {
     List studentList; // Create an instance of the List class
     char id[10];
     LibStudent stu;
-	int detail, source;
+    int detail = 0, source = 0;
     int choice;
     bool stop = false;
         ReadFile(STUDENT_INFO_FILE, &studentList);
@@ -85,7 +85,10 @@ int main() {
                 system("pause");
                 break;
             case 5:
-				
+                if (Display(&studentList, source, detail)) {
+                    
+                }
+                system("pause");
                 break;
 
             case 6:
@@ -291,6 +294,7 @@ bool InsertBook(string filename, List* list) {
     Node* cur = list->head;
     LibBook book;
     LibStudent student;
+    List list1;
     char author[256], temp[256];
     char name[256];
     char borrow[256], due[256];
@@ -440,6 +444,52 @@ bool InsertBook(string filename, List* list) {
     }
 }
 
+bool Display(List* list, int source, int detail) {
+    Node* cur;
+    LibStudent stu;
+    LibBook book;
+    int STUDENT = 1;
+    int BOOK = 1;
+
+    cout << "Where do you want to display the output (1 - File / 2 - Screen): ";
+    cin >> source;
+    cout << endl;
+    cout << "Do you want to display book list for every student (1 - YES / 2 - NO): ";
+    cin >> detail;
+
+    if (source == 2 && detail == 1) {
+        {
+            cur = list->head;
+            while (cur != NULL)
+            {
+                cout << endl;
+                cout << "STUDENT " << STUDENT;
+                cur->item.print(cout);
+                cout << endl;
+                cout << "BOOK LIST : " << endl << endl;
+                if (cur->item.totalbook == 0)
+                {
+                    cout << endl;
+                    cout << "No borrow book yet. " << endl;
+                }
+                else {
+                    for (int i = 0; i < cur->item.totalbook; i++)
+                    {
+                        cout << "Book " << i + 1 << endl;;
+                        cur->item.book[i].print(cout);
+                        cout << endl;
+                    }
+                }
+                cout <<
+                    "****************************************************************************" <<
+                    endl;
+                cur = cur->next;
+                STUDENT++;
+            }
+            return true;
+        }
+    }
+}
 
 //*************************************************************(6)****************************************************
 bool computeAndDisplayStatistics(List* list) {
