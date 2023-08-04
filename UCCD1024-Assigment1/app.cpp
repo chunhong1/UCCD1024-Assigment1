@@ -17,6 +17,7 @@ const string BOOK_FILE = "book.txt";
 //function prototype
 bool isDuplicate(List* list, LibStudent& student);
 void center(string);
+int calculateJulianDate(int year, int month, int day);
 
 
 bool ReadFile(string, List*);
@@ -291,203 +292,221 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 //*********************************************(4)*************************************************
 bool InsertBook(string filename, List* list) {
     ifstream in(filename);
-    Node* cur = list->head;
-    LibBook book;
-    LibStudent student;
-    List list1;
-    char author[256], temp[256];
-    char name[256];
-    char borrow[256], due[256];
-    char line[50];
-    char day[20], month[20], year[20];
-    int x = 0, y = 0, i = 0;
-    int a = 0, b = 0;
-    char readID[10];
-    int current = (2020 * 366) + (3 * 31) + 29;
-    int dueDate = 0;
-    int componentValue = 0;
-    Date date;
-
-    if (!in)
-    {
+    if (!in) {
         cout << "Cannot open the " << filename << endl;
         return false;
     }
-    else
-    {
-        while (!in.eof())
-        {
-            in >> readID;
-            in >> author;
-            in >> book.title;
-            in >> book.publisher;
-            in >> book.ISBN;
-            in >> book.yearPublished;
-            in >> book.callNum;
-            in >> borrow;
-            in >> due;
-            book.fine = 0;
-            x = 0; y = 0;
-            //to ignore the character '_'
-            char* ptr = author;
-            while (*ptr != '\0') {
-                if (*ptr == '_') {
-                    *ptr = ' ';
-                }
-                ptr++;
-            }
-            char* ptr1 = book.title;
-            while (*ptr1 != '\0') {
-                if (*ptr1 == '_') {
-                    *ptr1 = ' ';
-                }
-                ptr1++;
-            }
-            char* ptr3 = book.publisher;
-            while (*ptr3 != '\0') {
-                if (*ptr3 == '_') {
-                    *ptr3 = ' ';
-                }
-                ptr3++;
-            }
-            while (author[i] != '\0') {
-                book.author[y] = new char[256];
-                strcpy(book.author[y], "	");
 
-                if (author[i] != '/') {
-                    temp[x] = author[i];
+    int current = calculateJulianDate(2020, 3, 29);
+    int componentValue = 0;
+
+    while (!in.eof()) {
+        LibBook book;
+        LibStudent student;
+        char readID[10], author[256], temp[256], borrow[256], due[256];
+        int x = 0, y = 0, i = 0, a = 0, b = 0;
+        book.fine = 0;
+
+        in >> readID >> author >> book.title >> book.publisher >> book.ISBN >> book.yearPublished >> book.callNum >> borrow >> due;
+        
+        // Ignore the character '_'
+        for (char* ptr = author; *ptr != '\0'; ptr++) {
+            if (*ptr == '_') *ptr = ' ';
+        }
+        for (char* ptr1 = book.title; *ptr1 != '\0'; ptr1++) {
+            if (*ptr1 == '_') *ptr1 = ' ';
+        }
+        for (char* ptr3 = book.publisher; *ptr3 != '\0'; ptr3++) {
+            if (*ptr3 == '_') *ptr3 = ' ';
+        }
+
+        // Loop to extract authors from the 'author' string
+        while (author[i] != '\0') {
+            if (author[i] != '/') {
+                temp[x] = author[i];
+                x++;
+            } else {
+                temp[x] = ' ';
+                x++;
+                for (int j = 0; j < 5; j++) {
+                    temp[x] = ' ';
                     x++;
                 }
-
-                if (author[i] == '/' || author[i + 1] == '\0') {
-                    temp[x] = '\0';
-                    x = 0;
-                    book.author[y] = temp;
-                    y++;
-                    strcpy(temp, "	");
+                while (author[i] == '/') {
+                    i++;
                 }
-
-                i++;
+                i--;
             }
 
-            i = 0;
-            a = 0;
-            b = 0;
+            if (author[i + 1] == '\0') {
+                temp[x] = '\0';
+                book.author[y] = new char[256];
+                strcpy(book.author[y], temp);
+                x = 0;
+                y++;
+            }
+            i++;
+        }
 
-            // Loop to extract day, month, and year from the 'borrow' string
-            for (int i = 0; borrow[i] != '\0'; i++) {
-                if (borrow[i] != '/') {
-                    componentValue = componentValue * 10 + (borrow[i] - '0');
-                }
-
-                if (borrow[i] == '/' || borrow[i + 1] == '\0') {
-                    if (a == 0) {
-                        book.borrow.day = componentValue;
-                    }
-                    else if (a == 1) {
-                        book.borrow.month = componentValue;
-                    }
-                    else if (a == 2) {
-                        book.borrow.year = componentValue;
-                    }
-                    componentValue = 0;
-                    a++;
-                }
+        // Loop to extract day, month, and year from the 'borrow' string
+        for (int i = 0; borrow[i] != '\0'; i++) {
+            if (borrow[i] != '/') {
+                componentValue = componentValue * 10 + (borrow[i] - '0');
             }
 
-            for (int i = 0; due[i] != '\0'; i++) {
-                if (due[i] != '/') {
-                    componentValue = componentValue * 10 + (due[i] - '0');
+            if (borrow[i] == '/' || borrow[i + 1] == '\0') {
+                if (a == 0) {
+                    book.borrow.day = componentValue;
+                } else if (a == 1) {
+                    book.borrow.month = componentValue;
+                } else if (a == 2) {
+                    book.borrow.year = componentValue;
                 }
-                if (due[i] == '/' || due[i + 1] == '\0') {
-                    if (b == 0) {
-                        book.due.day = componentValue;
-                    }
-                    else if (b == 1) {
-                        book.due.month = componentValue;
-                    }
-                    else if (b == 2) {
-                        book.due.year = componentValue;
-                    }
-                    componentValue = 0;
-                    b++;
-                }
-            }
-
-            if (book.due.month == 2) {
-                dueDate = (book.due.year * 366) + (book.due.month * 32) + (book.due.day);
-            }
-            else if (book.due.month == 3) {
-                dueDate = (book.due.year * 366) + (book.due.month * 31) + (book.due.day);
-            }
-            if ((current - dueDate) * 0.5 > 0)
-            {
-                book.fine = ((current - dueDate) * 0.5);
-            }
-            for (int i = 1; i <= list->count + 1; i++)
-            {
-                list->get(i, student);
-                if (strcmp(student.id, readID) == 0)
-                {
-                    //insert book to student
-                    student.book[student.totalbook] = book;
-                    student.totalbook++;
-                    student.calculateTotalFine(); //calcute total fine
-                    list->set(i, student);
-                }
-                else
-                    continue;
+                componentValue = 0;
+                a++;
             }
         }
-        in.close();
-        return true;
+
+        // Loop to extract day, month, and year from the 'due' string
+        for (int i = 0; due[i] != '\0'; i++) {
+            if (due[i] != '/') {
+                componentValue = componentValue * 10 + (due[i] - '0');
+            }
+            if (due[i] == '/' || due[i + 1] == '\0') {
+                if (b == 0) {
+                    book.due.day = componentValue;
+                } else if (b == 1) {
+                    book.due.month = componentValue;
+                } else if (b == 2) {
+                    book.due.year = componentValue;
+                }
+                componentValue = 0;
+                b++;
+            }
+        }
+
+        int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
+        if ((current - dueDate) * 0.5 > 0) {
+            book.fine = ((current - dueDate) * 0.5);
+        }
+
+        for (int i = 1; i <= list->count + 1; i++) {
+            list->get(i, student);
+            if (strcmp(student.id, readID) == 0) {
+                //insert book to student
+                student.book[student.totalbook] = book;
+                student.totalbook++;
+                //calculate total fine
+                student.calculateTotalFine(); // Call the function to calculate total fine
+                list->set(i, student);
+            }
+        }
     }
+    in.close();
+    return true;
+}
+
+int calculateJulianDate(int year, int month, int day) {
+    int a = (14 - month) / 12;
+    int y = year + 4800 - a;
+    int m = month + 12 * a - 3;
+    int julianDate = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045;
+    return julianDate;
 }
 
 bool Display(List* list, int source, int detail) {
-    Node* cur;
-    LibStudent stu;
-    LibBook book;
-    int STUDENT = 1;
-    int BOOK = 1;
+    Node* cur = list->head;
+    int StuNo = 1;
 
+    if (cur == NULL) {
+        cout << "\nNo data to display!" << endl;
+        return false;
+    }
     cout << "Where do you want to display the output (1 - File / 2 - Screen): ";
     cin >> source;
-    cout << endl;
-    cout << "Do you want to display book list for every student (1 - YES / 2 - NO): ";
+    cout << "Do you want to display booklist for every student (1 - YES / 2 - NO): ";
     cin >> detail;
+    cout << endl;
+    if (source == 1) {
+        ofstream output;
+        string outputFile;
+        if (detail == 1)
+            outputFile = "student_booklist.txt";
+        else if (detail == 2)
+            outputFile = "student_info.txt";
 
-    if (source == 2 && detail == 1) {
-        {
-            cur = list->head;
-            while (cur != NULL)
-            {
-                cout << endl;
-                cout << "STUDENT " << STUDENT;
-                cur->item.print(cout);
-                cout << endl;
-                cout << "BOOK LIST : " << endl << endl;
-                if (cur->item.totalbook == 0)
-                {
-                    cout << endl;
-                    cout << "No borrow book yet. " << endl;
+        output.open(outputFile);
+        if (!output.is_open()) {
+            cout << "Failed to open " << outputFile << "!" << endl;
+            return false;
+        }
+
+        while (cur != NULL) {
+            output << "STUDENT " << StuNo << endl;
+            cur->item.print(output);
+            output << endl;
+            if (detail == 1) {
+                output << "BOOK LIST:" << endl;
+                if (cur->item.totalbook == 0) {
+                    output << "No borrowed books yet." << endl;
                 }
                 else {
-                    for (int i = 0; i < cur->item.totalbook; i++)
-                    {
-                        cout << "Book " << i + 1 << endl;;
-                        cur->item.book[i].print(cout);
-                        cout << endl;
+                    for (int i = 0; i < cur->item.totalbook; i++) {
+                        output << endl;
+                        output << "Book " << i + 1 << endl;
+                        cur->item.book[i].print(output);
                     }
                 }
-                cout <<
-                    "****************************************************************************" <<
-                    endl;
-                cur = cur->next;
-                STUDENT++;
+                output << "****************************************************************************" << endl;
             }
-            return true;
+            else if (detail == 2) {
+                output << "****************************************************************************" << endl;
+            }
+
+            cur = cur->next;
+            StuNo++;
         }
+
+        cout << "Successfully display output to " << outputFile << endl;
+        cout << endl;
+        cout << "Successfully display output" << endl;
+        output.close();
+        return true;
+    }
+    else if (source == 2) {
+        while (cur != NULL) {
+            cout << "STUDENT " << StuNo;
+            cur->item.print(cout);
+            if (detail == 1) {
+                cout << endl;
+                cout << "BOOK LIST:" << endl;
+                if (cur->item.totalbook == 0) {
+                    cout << "No borrowed books yet." << endl;
+                }
+                else {
+                    for (int i = 0; i < cur->item.totalbook; i++) {
+                        cout << endl;
+                        cout << "Book " << i + 1 << endl;
+                        cur->item.book[i].print(cout);
+                    }
+                }
+                cout << "****************************************************************************" <<endl<< endl;
+            }
+            else if (detail == 2) {
+                cout << endl;
+                cout << "****************************************************************************" << endl << endl;
+            }
+
+            cur = cur->next;
+            StuNo++;
+        }
+
+        cout << "Successfully display output." << endl;
+        return true;
+    }
+    else {
+        cout << "Invalid source value. Use 1 for file or 2 for screen." << endl;
+        return false;
     }
 }
 

@@ -33,35 +33,4 @@
 1603679  Micheal_Main/Walter_Savitch Data_Structures_and_Other_Objects_Using_C++ Prentice_Hall 0132129485 2010 QA76.73.C153N868 29/2/2020 29/3/2020  
 
 
-1310983 Micheal_Main/Walter_Savitch Data_Structures_and_Other_Objects_Using_C++ Prentice_Hall 0132129485 2010 QA76.73.C153N868 20/3/2020 20/4/2020
-
-1387654	 Tony_Gaddis/Godfrey_Muganda Starting_Out_with_Java:From_Control_Structures_Through_Data_Structures Addison-Wesley 0321545869 2011 QA76.73.C153S26 30/3/2020 30/4/2020	
-
-
-1490943	 Micheal_Main/Walter_Savitch Data_Structures_and_Other_Objects_Using_C++ Prentice_Hall 0132129485 2010 QA76.73.C153N868 27/3/2020 27/4/2020  
-
-
-1274543	 Nell_Dale/Daniel_Joyce/Chip_Weems Object-Oriented_Data_Structures_Using_Java Jones_&_Bartlett_Learning 1449613543 2011 QA76.58.M532 6/2/2020 6/3/2020 
-
-
-1274543  Micheal_Main/Walter_Savitch Data_Structures_and_Other_Objects_Using_C++ Prentice_Hall 0132129485 2010 QA76.73.C153N868 1/1/2020 1/2/2020  
-
-
-1200233	 Micheal_Main/Walter_Savitch Data_Structures_and_Other_Objects_Using_C++ Prentice_Hall 0132129485 2010 QA76.73.C153N868 3/3/2020 3/4/2020  
-
-
-1274543	 Noel_Kalicharan Advanced_topics_in_C:_Core_Concepts_in_Data_Structures Apress 2361589071 2013 QA76.73.C15K35 1/1/2020  1/2/2020
-
-
-1490943	 Tony_Gaddis/Godfrey_Muganda Starting_Out_with_Java:From_Control_Structures_Through_Data_Structures Addison-Wesley 0321545869 2011 QA76.73.C153S26 2/2/2020 4/3/2020	
-
-
-1490943	 Noel_Kalicharan Advanced_topics_in_C:_Core_Concepts_in_Data_Structures Apress 2361589071 2013 QA76.73.C15K35 12/3/2020  12/4/2020
-
-
-1222345	 Noel_Kalicharan Advanced_topics_in_C:_Core_Concepts_in_Data_Structures Apress 2361589071 2013 QA76.73.C15K35 23/1/2020 23/2/2020  
-
-
-1323451	 Nell_Dale/Daniel_Joyce/Chip_Weems Object-Oriented_Data_Structures_Using_Java Jones_&_Bartlett_Learning 1449613543 2011 QA76.58.M532 9/4/2020 9/5/2020 
-
-	
+1310983 Micheal_Main/Walter_Savitch Data_Structures_and_Other_Objects_Using_C++ Prentice_Hall 0132129485 2010 QA76.73.C153N868 20/3/2020 20/4/2020  
