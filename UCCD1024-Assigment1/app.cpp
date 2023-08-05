@@ -542,64 +542,71 @@ bool Display(List* list, int source, int detail) {
 
 //*************************************************************(6)****************************************************
 bool computeAndDisplayStatistics(List* list) {
-    const string STUDENT_INFO_FILE = "student.txt";
-    const string STUDENT_BOOK_LIST_FILE = "student_booklist.txt";
-
-    ifstream inStudent(STUDENT_INFO_FILE);
-    ifstream inBook(STUDENT_BOOK_LIST_FILE);
-    char text[256];
-    LibStudent newStudent;
-    LibBook book;
-    int bookCount = 0;
-
-    if (!inStudent || !inBook) {
-        cout << "Failed to open one or both of the files." << endl;
-        return false;
-    }
-
-    if (list == NULL || list->empty()) {
-        cout << "Empty list. Unable to compute statistics." << endl;
+    if (list->empty()) {
         return false;
     }
 
     // Initialize variables to hold statistics for each course
-    int numStudentsCS = 0, numStudentsIA = 0, numStudentsIB = 0, numStudentsCN = 0, numStudentsCT = 0;
-    int totalBooksBorrowedCS = 0, totalBooksBorrowedIA = 0, totalBooksBorrowedIB = 0, totalBooksBorrowedCN = 0, totalBooksBorrowedCT = 0;
-    int totalOverdueBooksCS = 0, totalOverdueBooksIA = 0, totalOverdueBooksIB = 0, totalOverdueBooksCN = 0, totalOverdueBooksCT = 0;
-    float totalOverdueFineCS = 0.00, totalOverdueFineIA = 0.00, totalOverdueFineIB = 0.00, totalOverdueFineCN = 0.00, totalOverdueFineCT = 0.00;
+    const int CS = 0;
+    const int IA = 1;
+    const int IB = 2;
+    const int CN = 3;
+    const int CT = 4;
 
+    int numStudent[5] = { 0,0,0,0,0 };
+    int totalBooksBorrowed[5] = { 0,0,0,0,0 };
+    int totalOverdueBooks[5] = { 0,0,0,0,0 };
+    float totalOverdueFine[5] = { 0.00 ,0.00 ,0.00 ,0.00 ,0.00 };
+    
     Node* cur = list->head;
+    int current = calculateJulianDate(2020, 3, 29);
+
     while (cur != nullptr) {
+        int overdueBook = 0;
+
+        for (int i = 0; i < cur->item.totalbook; i++)
+        {
+            
+            LibBook book = cur->item.book[i];
+            int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
+
+
+            if (current > dueDate)
+            {
+                overdueBook++;
+            }
+        }
+
         // Compute statistics for each course based on the data in the current node
         if (strcmp(cur->item.course, "CS") == 0) {
-            numStudentsCS++;
-            totalBooksBorrowedCS += cur->item.totalbook;
-            totalOverdueBooksCS += cur->item.totalbook; // Accumulate total overdue books for CS
-            totalOverdueFineCS += cur->item.total_fine; // Accumulate total overdue fine for CS
+            numStudent[CS]++;
+            totalBooksBorrowed[CS] += cur->item.totalbook;
+            totalOverdueBooks[CS] += overdueBook; // Accumulate total overdue books for CS
+            totalOverdueFine[CS] += cur->item.total_fine; // Accumulate total overdue fine for CS
         }
         else if (strcmp(cur->item.course, "IA") == 0) {
-            numStudentsIA++;
-            totalBooksBorrowedIA += cur->item.totalbook;
-            totalOverdueBooksIA += cur->item.totalbook; // Accumulate total overdue books for IA
-            totalOverdueFineIA += cur->item.total_fine; // Accumulate total overdue fine for IA
+            numStudent[IA]++;
+            totalBooksBorrowed[IA] += cur->item.totalbook;
+            totalOverdueBooks[IA] += overdueBook; // Accumulate total overdue books for IA
+            totalOverdueFine[IA] += cur->item.total_fine; // Accumulate total overdue fine for IA
         }
         else if (strcmp(cur->item.course, "IB") == 0) {
-            numStudentsIB++;
-            totalBooksBorrowedIB += cur->item.totalbook;
-            totalOverdueBooksIB += cur->item.totalbook; // Accumulate total overdue books for IB
-            totalOverdueFineIB += cur->item.total_fine; // Accumulate total overdue fine for IB
+            numStudent[IB]++;
+            totalBooksBorrowed[IB] += cur->item.totalbook;
+            totalOverdueBooks[IB] += overdueBook; // Accumulate total overdue books for IB
+            totalOverdueFine[IB] += cur->item.total_fine; // Accumulate total overdue fine for IB
         }
         else if (strcmp(cur->item.course, "CT") == 0) {
-            numStudentsCT++;
-            totalBooksBorrowedCT += cur->item.totalbook;
-            totalOverdueBooksCT += cur->item.totalbook; // Accumulate total overdue books for CT
-            totalOverdueFineCT += cur->item.total_fine; // Accumulate total overdue fine for CT
+            numStudent[CT]++;
+            totalBooksBorrowed[CT] += cur->item.totalbook;
+            totalOverdueBooks[CT] += overdueBook; // Accumulate total overdue books for CT
+            totalOverdueFine[CT] += cur->item.total_fine; // Accumulate total overdue fine for CT
         }
         else if (strcmp(cur->item.course, "CN") == 0) {
-            numStudentsCN++;
-            totalBooksBorrowedCN += cur->item.totalbook;
-            totalOverdueBooksCN += cur->item.totalbook; // Accumulate total overdue books for CN
-            totalOverdueFineCN += cur->item.total_fine; // Accumulate total overdue fine for CN
+            numStudent[CN]++;
+            totalBooksBorrowed[CN] += cur->item.totalbook;
+            totalOverdueBooks[CN] += overdueBook; // Accumulate total overdue books for CN
+            totalOverdueFine[CN] += cur->item.total_fine; // Accumulate total overdue fine for CN
         }
 
         // Move to the next node in the list
@@ -608,12 +615,12 @@ bool computeAndDisplayStatistics(List* list) {
 
     // Display computed statistics for each course in the specified table format
     cout << "Course\tNumber of Students\tTotal Books Borrowed\tTotal Overdue Books\tTotal Overdue Fine (RM)" << endl;
-    cout << "CS\t" << numStudentsCS << "\t\t\t" << totalBooksBorrowedCS << "\t\t\t" << totalOverdueBooksCS << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCS << endl;
-    cout << "IA\t" << numStudentsIA << "\t\t\t" << totalBooksBorrowedIA << "\t\t\t" << totalOverdueBooksIA << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineIA << endl;
-    cout << "IB\t" << numStudentsIB << "\t\t\t" << totalBooksBorrowedIB << "\t\t\t" << totalOverdueBooksIB << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineIB << endl;
-    cout << "CT\t" << numStudentsCT << "\t\t\t" << totalBooksBorrowedCT << "\t\t\t" << totalOverdueBooksCT << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCT << endl;
-    cout << "CN\t" << numStudentsCN << "\t\t\t" << totalBooksBorrowedCN << "\t\t\t" << totalOverdueBooksCN << "\t\t\t" << fixed << setprecision(2) << totalOverdueFineCN << endl;
-
+    cout << "CS\t" << numStudent[CS] << "\t\t\t" << totalBooksBorrowed[CS] << "\t\t\t" << totalOverdueBooks[CS] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[CS] << endl;
+    cout << "IA\t" << numStudent[IA] << "\t\t\t" << totalBooksBorrowed[IA] << "\t\t\t" << totalOverdueBooks[IA] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[IA] << endl;
+    cout << "IB\t" << numStudent[IB] << "\t\t\t" << totalBooksBorrowed[IB] << "\t\t\t" << totalOverdueBooks[IB] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[IB] << endl;
+    cout << "CN\t" << numStudent[CN] << "\t\t\t" << totalBooksBorrowed[CN] << "\t\t\t" << totalOverdueBooks[CN] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[CN] << endl;
+    cout << "CT\t" << numStudent[CT] << "\t\t\t" << totalBooksBorrowed[CT] << "\t\t\t" << totalOverdueBooks[CT] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[CT] << endl;
+    
     return true;
 }
 
