@@ -632,11 +632,12 @@ bool printStuWithSameBook(List* list, char* callNum) {
         return false;
     }
         
-
     cur = list->head;
 
     while (cur != NULL) {
         for (int i = 0; i < cur->item.totalbook; i++) {
+            // compare call number of each book that borrowed by the student with input callNum
+            //print student info if the condition is met
             if (strcmp(cur->item.book[i].callNum, callNum) == 0) {
                 count++;
                 cout << endl;
@@ -650,13 +651,16 @@ bool printStuWithSameBook(List* list, char* callNum) {
             }
         }
 
+        // Move to the next node in the list
         cur = cur->next;
     }
 
+    // prompt message if there is no student borrow the book
     if (count == 0) {
         cout << "No students found who borrowed the book with call number " << callNum << "." << endl;
         return false;
     }
+    // summarise the total number of student that borrow the book
     else {
         cout << "\nThere are "<< count << " students that borrow the book with call number " << callNum << "." << endl;
     }
