@@ -122,6 +122,7 @@ int main() {
             char callNum[20];
             cout << "Enter the call number of the book: ";
             cin >> callNum;
+
             printStuWithSameBook(&studentList, callNum);
 
             system("pause");
@@ -626,34 +627,21 @@ bool computeAndDisplayStatistics(List* list) {
 
 //**************************************************(7)*******************************************************
 bool printStuWithSameBook(List* list, char* callNum) {
-    const string STUDENT_INFO_FILE = "student.txt";
-    const string STUDENT_BOOK_LIST_FILE = "student_booklist.txt";
+    Node* cur;
+    int count = 0;
 
-    //The struct to defined for LibStudent and LibBook
-    struct Date {
-        int day;
-        int month;
-        int year;
-    };
-
-    ifstream in(STUDENT_BOOK_LIST_FILE);
-    Node* cur = list->head;
-    bool found = false;
-
-    if (!in) {
-        cout << "Cannot open the " << STUDENT_BOOK_LIST_FILE << endl;
+    if (list->empty()) {
+        cout << "Student list is empty." << endl;
         return false;
     }
+        
 
-    int count = 0;
+    cur = list->head;
 
     while (cur != NULL) {
         for (int i = 0; i < cur->item.totalbook; i++) {
             if (strcmp(cur->item.book[i].callNum, callNum) == 0) {
                 count++;
-                if (count == 1) {
-                    cout << "There are " << count << " student(s) that borrow the book with call number " << callNum << " as shown below:" << endl;
-                }
                 cout << endl;
                 cout << "Student Id = " << cur->item.id << endl;
                 cout << "Name = " << cur->item.name << endl;
@@ -661,14 +649,19 @@ bool printStuWithSameBook(List* list, char* callNum) {
                 cout << "Phone Number = " << cur->item.phone_no << endl;
                 cout << "Borrow Date: " << cur->item.book[i].borrow.day << "/" << cur->item.book[i].borrow.month << "/" << cur->item.book[i].borrow.year << endl;
                 cout << "Due Date: " << cur->item.book[i].due.day << "/" << cur->item.book[i].due.month << "/" << cur->item.book[i].due.year << endl;
+                break;
             }
         }
+
         cur = cur->next;
     }
 
     if (count == 0) {
         cout << "No students found who borrowed the book with call number " << callNum << "." << endl;
         return false;
+    }
+    else {
+        cout << "\nThere are "<< count << " students that borrow the book with call number " << callNum << "." << endl;
     }
 
     return true;
