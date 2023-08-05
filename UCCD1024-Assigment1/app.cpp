@@ -18,6 +18,7 @@ const string BOOK_FILE = "book.txt";
 bool isDuplicate(List* list, LibStudent& student);
 void center(string);
 int calculateJulianDate(int year, int month, int day);
+bool printList(List);
 
 
 bool ReadFile(string, List*);
@@ -120,7 +121,18 @@ int main() {
 
                 break;
             case 8:
-                if (!displayWarnedStudent(&studentList,&type1,&type2)) 
+                if (displayWarnedStudent(&studentList,&type1,&type2)) 
+                {
+                    cout << "Type 1 warning student list" << endl;
+                    cout << "****************************************************************************" << endl;
+                    printList(type1);
+                    cout << endl;
+
+                    cout << "Type 2 warning student list" << endl;
+                    cout << "****************************************************************************" << endl;
+                    printList(type2);
+                }
+                else
                 {
                     cout << "Student list is empty." << endl;
                 }
@@ -662,52 +674,63 @@ bool displayWarnedStudent(List* list, List* type1, List* type2)
     //tranversing the node
     while (cur != NULL)
     {
-        int overdueBook = 0;
+        int overdueBook1 = 0;
+        int overdueBook2 = 0;
+
         // Check for type 1 warning condition (more than 2 books overdue for >= 10 days)
         for (int i = 0; i < cur->item.totalbook; i++)
         {
-            //special case: total book borrowed by the student is less than 2
-            if (cur->item.totalbook < 2)
-                break;
-
             LibBook book = cur->item.book[i];
             int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
 
             if (current - dueDate >= 10)
             {
-                overdueBook++;
+                overdueBook1++;
+            }
+
+            if (current > dueDate)
+            {
+                overdueBook2++;
             }
         }
 
-        // insert to the list if condition is met
-        if (overdueBook >= 2)
+        // insert student to the type 1 list if more than 2 books that are overdue for >= 10 days 
+        if (overdueBook1 >= 2)
         {
             type1->insert(cur->item);
         }
         
-        cur = cur->next;
-    }
-
-    
-    cur = type1->head;
-
-    // if no student have more than 2 books overdue for >= 10 days
-    if (cur == NULL)
-    {
-        cout << "No student are listed in type 1 warning list." << endl;
-    }
-    // else display type 1 list
-    else
-    {
-        while (cur != NULL) {
-            cur->item.print(cout);
-            cur = cur->next;
+        // insert student to the type 2 list if the total fine is more than RM50.00 and every book are overdue. 
+        if (cur->item.total_fine > 50.00 && overdueBook2 == cur->item.totalbook)
+        {
+            type2->insert(cur->item);
         }
+
+        cur = cur->next;
     }
 
     return true;
 }
 
+bool printList(List list)
+{
+    Node* cur;
+
+    if (list.empty())
+    {
+        cout << "No records in the list.\n";
+        return false;
+    }
+
+    cur = list.head; //start traversing from the first node
+
+    while (cur != NULL) {
+        cur->item.print(cout);
+        cur = cur->next;
+    }
+
+    return true;
+}
 
 
 
