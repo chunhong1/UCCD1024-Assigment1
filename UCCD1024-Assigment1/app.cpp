@@ -14,13 +14,12 @@ using namespace std;
 //constant
 const string STUDENT_INFO_FILE = "student.txt";
 const string BOOK_FILE = "book.txt";
+
 //function prototype
 bool isDuplicate(List* list, LibStudent& student);
 void center(string);
 int calculateJulianDate(int year, int month, int day);
 bool printList(List);
-
-
 bool ReadFile(string, List*);
 bool DeleteRecord(List*, char*);
 bool SearchStudent(List*, char* id, LibStudent&);
@@ -39,119 +38,133 @@ int main() {
     int detail = 0, source = 0;
     int choice;
     bool stop = false;
-        ReadFile(STUDENT_INFO_FILE, &studentList);
-        do {
-            choice = menu();
-            switch (choice) {
-            case 1:
-                if (ReadFile(STUDENT_INFO_FILE, &studentList))
-                {
-                    cout << studentList.size() << " records have been successfully read." << endl;
-                }
-                else
-                {
-                    cout << "Failed to read data or encountered an error." << endl;
-                }
+    do {
+        choice = menu();
+        switch (choice) {
+        case 1:
 
-                system("pause");
-                break;
-            case 2:
-                
-                if (DeleteRecord(&studentList, id)) {
-                    cout << "Student Record has been removed...." << endl;;
-                }
-                else {
-                    cout << "Failed to remove student record!!" << endl;
-                }
+            if (ReadFile(STUDENT_INFO_FILE, &studentList))
+            {
+                cout << studentList.size() << " records have been successfully read." << endl;
+            }
+            else
+            {
+                cout << "Failed to read data or encountered an error." << endl;
+            }
 
-                system("pause");
-                break;
-            case 3:
-                
-                if (SearchStudent(&studentList, id, stu)) {
-                    cout << "Student Found" << endl;
-                    cout << "Student Information:" << endl;
-                    stu.print(cout);
-                    cout <<"Total Books: "<< stu.totalbook;
-                    cout << endl;
-                }
-                else {
-                    cout << "Student Not Found." << endl;
-                }
-                system("pause");
-                break;
-            case 4:
-                if (InsertBook(BOOK_FILE, &studentList)) {
-                    cout << "Books inserted successfully to student list" << endl;
-                }
-                else {
-                    cout << "An error has occured" << endl;
-                }
-                system("pause");
-                break;
-            case 5:
-                if (Display(&studentList, source, detail)) {
-                    
-                }
-                system("pause");
-                break;
+            system("pause");
+            break;
 
-            case 6:
-                if (computeAndDisplayStatistics(&studentList)) {
-                    cout << "Statistics computed and displayed successfully." << endl;
-                }
-                else {
-                    cout << "Empty list. Unable to compute statistics." << endl;
-                }
-                system("pause");
-                break;
-                {
-                    computeAndDisplayStatistics(&studentList);
-                }
+        case 2:
 
-                break;
+            if (DeleteRecord(&studentList, id)) {
+                cout << "Student Record has been removed...." << endl;;
+            }
+            else {
+                cout << "Failed to remove student record!!" << endl;
+            }
 
+            system("pause");
+            break;
 
-            case 7:
-                char callNum[20];
-                cout << "Enter the call number of the book: ";
-                cin >> callNum;
-                printStuWithSameBook(&studentList, callNum);
-                system("pause");
+        case 3:
 
-                break;
-            case 8:
-                if (displayWarnedStudent(&studentList,&type1,&type2)) 
-                {
-                    cout << "Type 1 warning student list" << endl;
-                    cout << "****************************************************************************" << endl;
-                    printList(type1);
-                    cout << endl;
+            if (SearchStudent(&studentList, id, stu)) {
+                cout << "Student Found" << endl;
+                cout << "Student Information:" << endl;
+                stu.print(cout);
+                cout << "Total Books: " << stu.totalbook;
+                cout << endl;
+            }
+            else {
+                cout << "Student Not Found." << endl;
+            }
+            system("pause");
+            break;
 
-                    cout << "Type 2 warning student list" << endl;
-                    cout << "****************************************************************************" << endl;
-                    printList(type2);
-                }
-                else
-                {
-                    cout << "Student list is empty." << endl;
-                }
+        case 4:
 
-                system("pause");
-                break;
-            case 9:
-                stop = true;
-                break;
-            default:
-                cout << "Invalid Input!\a" << endl;
-                system("pause");
+            if (InsertBook(BOOK_FILE, &studentList)) {
+                cout << "Books inserted successfully to student list" << endl;
+            }
+            else {
+                cout << "An error has occured" << endl;
+            }
+            system("pause");
+            break;
+
+        case 5:
+
+            if (Display(&studentList, source, detail)) {
 
             }
-            cin.clear();
-            cin.ignore();
-            cout << endl;
+            system("pause");
+            break;
 
-        } while (!stop);
+        case 6:
+
+            if (computeAndDisplayStatistics(&studentList)) {
+                cout << "Statistics computed and displayed successfully." << endl;
+            }
+            else {
+                cout << "Empty list. Unable to compute statistics." << endl;
+            }
+            system("pause");
+            break;
+            {
+                computeAndDisplayStatistics(&studentList);
+            }
+
+            break;
+
+        case 7:
+
+            char callNum[20];
+            cout << "Enter the call number of the book: ";
+            cin >> callNum;
+            printStuWithSameBook(&studentList, callNum);
+
+            system("pause");
+            break;
+
+        case 8:
+
+            if (displayWarnedStudent(&studentList, &type1, &type2))
+            {
+                cout << "Type 1 warning student list" << endl;
+                cout << "****************************************************************************" << endl;
+                printList(type1);
+                cout << endl;
+
+                cout << "Type 2 warning student list" << endl;
+                cout << "****************************************************************************" << endl;
+                printList(type2);
+            }
+            else
+            {
+                cout << "Student list is empty." << endl;
+            }
+
+            system("pause");
+            break;
+
+        case 9:
+
+            stop = true;
+            break;
+
+        default:
+
+            cout << "Invalid Input!\a" << endl;
+            system("pause");
+
+        }
+
+        cin.clear();
+        cin.ignore();
+        cout << endl;
+
+    } while (!stop);
 
 	cout << "\n\n";
     system("pause");
@@ -165,31 +178,28 @@ void center(string string) {
     cout << setw(space + string.length()) << string << endl;
 }
 
-    // function to check if a student record is a duplicate in the list
-    bool isDuplicate(List * list, LibStudent & student) {
+// function to check if a student record is a duplicate in the list
+bool isDuplicate(List* list, LibStudent& student) {
 
-        Node* cur;
+    Node* cur;
 
-        //list will not duplicate if it is empty
-        if (list->empty())
-        {
-            return false;
-        }
-
-        cur = list->head; //start traversing from the first node
-
-        while (cur != NULL)
-        {
-            if (cur->item.compareName2(student))
-                return true;
-            else
-                cur = cur->next; //move to next node in the list
-        }
+    //list will not duplicate if it is empty
+    if (list->empty())
+    {
         return false;
     }
-    
-    
-    
+
+    cur = list->head; //start traversing from the first node
+
+    while (cur != NULL)
+    {
+        if (cur->item.compareName2(student))
+            return true;
+        else
+            cur = cur->next; //move to next node in the list
+    }
+    return false;
+}
     
 //*****************************************************************(1)*******************************************************
 // Read student information from the file "student.txt" and store it in the linked list
@@ -253,16 +263,12 @@ bool ReadFile(string filename, List* list) {
     return true;
 }
 
-
-
-
 //*****************************************************************(2)***************************************************
 //Delete record for existing student through input of student ID
 bool DeleteRecord(List* list, char* id) {
     char del[10];
     cout << "Please Enter the Student ID you would like to delete: ";//Prompt user to input student id
     cin >> del;
-
 
     int position = 1;
     Node* cur = list->head;//Start traversing from first node
@@ -283,9 +289,6 @@ bool DeleteRecord(List* list, char* id) {
 
     return false;
 }
-
-
-
 
 //*************************************************************(3)****************************************************
 //Search for student through input of student ID
@@ -422,6 +425,7 @@ bool InsertBook(string filename, List* list) {
             }
         }
     }
+
     in.close();
     return true;
 }
@@ -433,6 +437,7 @@ int calculateJulianDate(int year, int month, int day) {
     int julianDate = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045;
     return julianDate;
 }
+
 //************************************************(5)*************************************************************
 bool Display(List* list, int source, int detail) {
     Node* cur = list->head;
@@ -442,20 +447,25 @@ bool Display(List* list, int source, int detail) {
         cout << "\nNo data to display!" << endl;
         return false;
     }
+
     cout << "Where do you want to display the output (1 - File / 2 - Screen): ";
     cin >> source;
+
     cout << "Do you want to display booklist for every student (1 - YES / 2 - NO): ";
     cin >> detail;
     cout << endl;
+
     if (source == 1) {
         ofstream output;
         string outputFile;
+
         if (detail == 1)
             outputFile = "student_booklist.txt";
         else if (detail == 2)
             outputFile = "student_info.txt";
 
         output.open(outputFile);
+
         if (!output.is_open()) {
             cout << "Failed to open " << outputFile << "!" << endl;
             return false;
@@ -558,7 +568,6 @@ bool computeAndDisplayStatistics(List* list) {
     int totalOverdueBooksCS = 0, totalOverdueBooksIA = 0, totalOverdueBooksIB = 0, totalOverdueBooksCN = 0, totalOverdueBooksCT = 0;
     float totalOverdueFineCS = 0.00, totalOverdueFineIA = 0.00, totalOverdueFineIB = 0.00, totalOverdueFineCN = 0.00, totalOverdueFineCT = 0.00;
 
-
     Node* cur = list->head;
     while (cur != nullptr) {
         // Compute statistics for each course based on the data in the current node
@@ -628,7 +637,6 @@ bool printStuWithSameBook(List* list, char* callNum) {
         cout << "Cannot open the " << STUDENT_BOOK_LIST_FILE << endl;
         return false;
     }
-
 
     int count = 0;
 
@@ -731,8 +739,6 @@ bool printList(List list)
 
     return true;
 }
-
-
 
 //*********************************************(9)**************************************************
 int menu() {
