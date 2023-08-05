@@ -56,8 +56,10 @@ int main() {
             break;
 
         case 2:
-
-            if (DeleteRecord(&studentList, id)) {
+            char del[10];
+            cout << "Please Enter the Student ID you would like to delete: ";//Prompt user to input student id
+            cin >> del;
+            if (DeleteRecord(&studentList, del)) {
                 cout << "Student Record has been removed...." << endl;;
             }
             else {
@@ -68,8 +70,10 @@ int main() {
             break;
 
         case 3:
-
-            if (SearchStudent(&studentList, id, stu)) {
+            char code[10];
+            cout << "Please Enter the Student ID you would like to search: ";//prompt user to input student ID
+            cin >> code;
+            if (SearchStudent(&studentList, code, stu)) {
                 cout << "Student Found" << endl;
                 cout << "Student Information:" << endl;
                 stu.print(cout);
@@ -266,20 +270,14 @@ bool ReadFile(string filename, List* list) {
 //*****************************************************************(2)***************************************************
 //Delete record for existing student through input of student ID
 bool DeleteRecord(List* list, char* id) {
-    char del[10];
-    cout << "Please Enter the Student ID you would like to delete: ";//Prompt user to input student id
-    cin >> del;
 
     int position = 1;
     Node* cur = list->head;//Start traversing from first node
-    type temp;
 
     while (cur != NULL) {
-        if (strcmp(cur->item.id, del) == 0) { //Compare student ID with user input
-            if (list->get(position, temp)) {//Use the get function to obtain intended linked list
+        if (strcmp(cur->item.id, id) == 0) { //Compare student ID with user input
                 list->remove(position);//Use function to remove link list
                 return true;
-            }
         }
         else {  // Move to the next node in the list
             cur = cur->next;
@@ -290,18 +288,17 @@ bool DeleteRecord(List* list, char* id) {
     return false;
 }
 
+
 //*************************************************************(3)****************************************************
 //Search for student through input of student ID
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
-    char code[10];
-    cout << "Please Enter the Student ID you would like to search: ";//prompt user to input student ID
-    cin >> code;
+    
 
     Node* cur = list->head;// Start traversing from first node
 
     while (cur != NULL)
     {
-        if (strcmp(cur->item.id, code) == 0) // Compare student ID in linked list with input of user
+        if (strcmp(cur->item.id, id) == 0) // Compare student ID in linked list with input of user
         {
             stu = cur->item; // Copy the found student data to the 'stu' reference
             return true;
