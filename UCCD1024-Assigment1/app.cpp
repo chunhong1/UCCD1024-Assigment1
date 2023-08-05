@@ -43,13 +43,15 @@ int main() {
             choice = menu();
             switch (choice) {
             case 1:
-                if (ReadFile(STUDENT_INFO_FILE, &studentList)) {
-                    cout << "Data successfully read and stored in the list." << endl;
-                    cout << studentList.count << " records have been successfully read." << endl;
+                if (ReadFile(STUDENT_INFO_FILE, &studentList))
+                {
+                    cout << studentList.size() << " records have been successfully read." << endl;
                 }
-                else {
+                else
+                {
                     cout << "Failed to read data or encountered an error." << endl;
                 }
+
                 system("pause");
                 break;
             case 2:
