@@ -32,6 +32,7 @@ int menu();
 
 int main() {
     List studentList; // Create an instance of the List class
+    List type1, type2;
     char id[10];
     LibStudent stu;
     int detail = 0, source = 0;
@@ -117,7 +118,12 @@ int main() {
 
                 break;
             case 8:
+                if (!displayWarnedStudent(&studentList,&type1,&type2)) 
+                {
+                    cout << "Student list is empty." << endl;
+                }
 
+                system("pause");
                 break;
             case 9:
                 stop = true;
@@ -640,6 +646,65 @@ bool printStuWithSameBook(List* list, char* callNum) {
 
 }
 
+//*********************************************(8)**************************************************
+bool displayWarnedStudent(List* list, List* type1, List* type2)
+{
+    Node* cur;
+    int current = calculateJulianDate(2020, 3, 29);
+    
+    if (list->empty())
+        return false;
+
+    cur = list->head;
+
+    //tranversing the node
+    while (cur != NULL)
+    {
+        int overdueBook = 0;
+        // Check for type 1 warning condition (more than 2 books overdue for >= 10 days)
+        for (int i = 0; i < cur->item.totalbook; i++)
+        {
+            //special case: total book borrowed by the student is less than 2
+            if (cur->item.totalbook < 2)
+                break;
+
+            LibBook book = cur->item.book[i];
+            int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
+
+            if (current - dueDate >= 10)
+            {
+                overdueBook++;
+            }
+        }
+
+        // insert to the list if condition is met
+        if (overdueBook >= 2)
+        {
+            type1->insert(cur->item);
+        }
+        
+        cur = cur->next;
+    }
+
+    
+    cur = type1->head;
+
+    // if no student have more than 2 books overdue for >= 10 days
+    if (cur == NULL)
+    {
+        cout << "No student are listed in type 1 warning list." << endl;
+    }
+    // else display type 1 list
+    else
+    {
+        while (cur != NULL) {
+            cur->item.print(cout);
+            cur = cur->next;
+        }
+    }
+
+    return true;
+}
 
 
 
