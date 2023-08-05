@@ -144,6 +144,7 @@ int main() {
                 cout << "Type 2 warning student list" << endl;
                 cout << "****************************************************************************" << endl;
                 printList(type2);
+                cout << endl;
             }
             else
             {
@@ -166,7 +167,7 @@ int main() {
         }
 
         cin.clear();
-        cin.ignore();
+        cin.ignore(256, '\n');
         cout << endl;
 
     } while (!stop);
