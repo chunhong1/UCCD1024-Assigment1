@@ -19,6 +19,7 @@ bool printList(List);
 bool isDue(LibBook, int);
 bool isDue(LibBook, int, int);
 void extractDate(char*, Date&);
+void replaceUnderscoresWithSpaces(char*);
 bool ReadFile(string, List*);
 bool DeleteRecord(List*, char*);
 bool SearchStudent(List*, char* id, LibStudent&);
@@ -335,15 +336,9 @@ bool InsertBook(string filename, List* list) {
         in >> readID >> author >> book.title >> book.publisher >> book.ISBN >> book.yearPublished >> book.callNum >> borrow >> due;
         
         // Ignore the character '_'
-        for (char* ptr = author; *ptr != '\0'; ptr++) {
-            if (*ptr == '_') *ptr = ' ';
-        }
-        for (char* ptr1 = book.title; *ptr1 != '\0'; ptr1++) {
-            if (*ptr1 == '_') *ptr1 = ' ';
-        }
-        for (char* ptr3 = book.publisher; *ptr3 != '\0'; ptr3++) {
-            if (*ptr3 == '_') *ptr3 = ' ';
-        }
+        replaceUnderscoresWithSpaces(author);
+        replaceUnderscoresWithSpaces(book.title);
+        replaceUnderscoresWithSpaces(book.publisher);
 
         // Loop to extract authors from the 'author' string
         while (author[i] != '\0') {
@@ -380,6 +375,7 @@ bool InsertBook(string filename, List* list) {
         extractDate(due, book.due);  
 
         int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
+
         if (isDue(book,current)) {
             book.fine = ((current - dueDate) * 0.5);
         }
@@ -749,6 +745,15 @@ void extractDate(char* dateStr, Date& date)
             }
             componentValue = 0;
             componentCount++;
+        }
+    }
+}
+
+void replaceUnderscoresWithSpaces(char* str) 
+{
+    for (char* ptr = str; *ptr != '\0'; ptr++) {
+        if (*ptr == '_') {
+            *ptr = ' ';
         }
     }
 }
