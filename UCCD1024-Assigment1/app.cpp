@@ -18,6 +18,7 @@ int calculateJulianDate(int year, int month, int day);
 bool printList(List);
 bool isDue(LibBook, int);
 bool isDue(LibBook, int, int);
+void extractDate(char*, Date&);
 bool ReadFile(string, List*);
 bool DeleteRecord(List*, char*);
 bool SearchStudent(List*, char* id, LibStudent&);
@@ -372,42 +373,13 @@ bool InsertBook(string filename, List* list) {
             i++;
         }
 
-        // Loop to extract day, month, and year from the 'borrow' string
-        for (int i = 0; borrow[i] != '\0'; i++) {
-            if (borrow[i] != '/') {
-                componentValue = componentValue * 10 + (borrow[i] - '0');
-            }
+        // Get the borrow date from the 'borrow' string
+        extractDate(borrow, book.borrow);
+        
+        // Get the due date from the 'due' string
+        extractDate(due, book.due);
+        
 
-            if (borrow[i] == '/' || borrow[i + 1] == '\0') {
-                if (a == 0) {
-                    book.borrow.day = componentValue;
-                } else if (a == 1) {
-                    book.borrow.month = componentValue;
-                } else if (a == 2) {
-                    book.borrow.year = componentValue;
-                }
-                componentValue = 0;
-                a++;
-            }
-        }
-
-        // Loop to extract day, month, and year from the 'due' string
-        for (int i = 0; due[i] != '\0'; i++) {
-            if (due[i] != '/') {
-                componentValue = componentValue * 10 + (due[i] - '0');
-            }
-            if (due[i] == '/' || due[i + 1] == '\0') {
-                if (b == 0) {
-                    book.due.day = componentValue;
-                } else if (b == 1) {
-                    book.due.month = componentValue;
-                } else if (b == 2) {
-                    book.due.year = componentValue;
-                }
-                componentValue = 0;
-                b++;
-            }
-        }
 
         int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
         if ((current - dueDate) * 0.5 > 0) {
@@ -757,6 +729,30 @@ bool isDue(LibBook book, int currentDate, int days)
     return false;
 }
 
+void extractDate(char* dateStr, Date& date)
+{
+    int componentValue = 0;
+    int componentCount = 0;
+    for (int i = 0; dateStr[i] != '\0'; i++) {
+        if (dateStr[i] != '/') {
+            componentValue = componentValue * 10 + (dateStr[i] - '0');
+        }
+
+        if (dateStr[i] == '/' || dateStr[i + 1] == '\0') {
+            if (componentCount == 0) {
+                date.day = componentValue;
+            }
+            else if (componentCount == 1) {
+                date.month = componentValue;
+            }
+            else if (componentCount == 2) {
+                date.year = componentValue;
+            }
+            componentValue = 0;
+            componentCount++;
+        }
+    }
+}
 //*********************************************(9)**************************************************
 int menu() {
     int operation;
