@@ -389,6 +389,7 @@ bool InsertBook(string filename, List* list) {
                 //calculate total fine
                 student.calculateTotalFine(); // Call the function to calculate total fine
                 list->set(i, student);
+                break; // no need to tranverse to the following student if the book is inserted into the student
             }
         }
     }
@@ -519,15 +520,17 @@ bool computeAndDisplayStatistics(List* list) {
     const int IB = 2;
     const int CN = 3;
     const int CT = 4;
+    const int PROGRAMME_SIZE = 5;
 
-    int numStudent[5] = { 0,0,0,0,0 };
-    int totalBooksBorrowed[5] = { 0,0,0,0,0 };
-    int totalOverdueBooks[5] = { 0,0,0,0,0 };
-    float totalOverdueFine[5] = { 0.00 ,0.00 ,0.00 ,0.00 ,0.00 };
+    string programmeName[PROGRAMME_SIZE] = { "CS","IA","IB","CN","CT" };
+    int numStudent[PROGRAMME_SIZE] = { 0,0,0,0,0 };
+    int totalBooksBorrowed[PROGRAMME_SIZE] = { 0,0,0,0,0 };
+    int totalOverdueBooks[PROGRAMME_SIZE] = { 0,0,0,0,0 };
+    float totalOverdueFine[PROGRAMME_SIZE] = { 0.00 ,0.00 ,0.00 ,0.00 ,0.00 };
     
     Node* cur = list->head;
 
-    while (cur != nullptr) {
+    while (cur != NULL) {
         int overdueBook = 0;
 
         for (int i = 0; i < cur->item.totalbook; i++)
@@ -577,11 +580,9 @@ bool computeAndDisplayStatistics(List* list) {
 
     // Display computed statistics for each course in the specified table format
     cout << "Course\tNumber of Students\tTotal Books Borrowed\tTotal Overdue Books\tTotal Overdue Fine (RM)" << endl;
-    cout << "CS\t" << numStudent[CS] << "\t\t\t" << totalBooksBorrowed[CS] << "\t\t\t" << totalOverdueBooks[CS] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[CS] << endl;
-    cout << "IA\t" << numStudent[IA] << "\t\t\t" << totalBooksBorrowed[IA] << "\t\t\t" << totalOverdueBooks[IA] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[IA] << endl;
-    cout << "IB\t" << numStudent[IB] << "\t\t\t" << totalBooksBorrowed[IB] << "\t\t\t" << totalOverdueBooks[IB] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[IB] << endl;
-    cout << "CN\t" << numStudent[CN] << "\t\t\t" << totalBooksBorrowed[CN] << "\t\t\t" << totalOverdueBooks[CN] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[CN] << endl;
-    cout << "CT\t" << numStudent[CT] << "\t\t\t" << totalBooksBorrowed[CT] << "\t\t\t" << totalOverdueBooks[CT] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[CT] << endl;
+    for (int i = 0; i < PROGRAMME_SIZE; i++) {
+        cout << programmeName[i] << "\t" << numStudent[i] << "\t\t\t" << totalBooksBorrowed[i] << "\t\t\t" << totalOverdueBooks[i] << "\t\t\t" << fixed << setprecision(2) << totalOverdueFine[i] << endl;
+    }
     
     return true;
 }
