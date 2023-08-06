@@ -609,8 +609,12 @@ bool printStuWithSameBook(List* list, char* callNum) {
                 cout << "Name = " << cur->item.name << endl;
                 cout << "Course = " << cur->item.course << endl;
                 cout << "Phone Number = " << cur->item.phone_no << endl;
-                cout << "Borrow Date: " << cur->item.book[i].borrow.day << "/" << cur->item.book[i].borrow.month << "/" << cur->item.book[i].borrow.year << endl;
-                cout << "Due Date: " << cur->item.book[i].due.day << "/" << cur->item.book[i].due.month << "/" << cur->item.book[i].due.year << endl;
+                cout << "Borrow Date: ";
+                cur->item.book[i].borrow.print(cout);
+                cout<< endl;
+                cout << "Due Date: ";
+                cur->item.book[i].due.print(cout);
+                cout << endl;
                 break;
             }
         }
