@@ -11,15 +11,13 @@
 
 using namespace std;
 
-//constant
-const string STUDENT_INFO_FILE = "student.txt";
-const string BOOK_FILE = "book.txt";
-
 //function prototype
 bool isDuplicate(List* list, LibStudent& student);
 void center(string);
 int calculateJulianDate(int year, int month, int day);
 bool printList(List);
+bool isDue(LibBook, int);
+bool isDue(LibBook, int, int);
 bool ReadFile(string, List*);
 bool DeleteRecord(List*, char*);
 bool SearchStudent(List*, char* id, LibStudent&);
@@ -30,10 +28,15 @@ bool printStuWithSameBook(List*, char*);
 bool displayWarnedStudent(List*, List*, List*);
 int menu();
 
+//constant
+const string STUDENT_INFO_FILE = "student.txt";
+const string BOOK_FILE = "book.txt";
+const int current = calculateJulianDate(2020, 3, 29);
+
 int main() {
     List studentList; // Create an instance of the List class
     List type1, type2;
-    char id[10];
+
     LibStudent stu;
     int detail = 0, source = 0;
     int choice;
@@ -319,7 +322,6 @@ bool InsertBook(string filename, List* list) {
         return false;
     }
 
-    int current = calculateJulianDate(2020, 3, 29);
     int componentValue = 0;
 
     while (!in.eof()) {
@@ -558,22 +560,17 @@ bool computeAndDisplayStatistics(List* list) {
     float totalOverdueFine[5] = { 0.00 ,0.00 ,0.00 ,0.00 ,0.00 };
     
     Node* cur = list->head;
-    int current = calculateJulianDate(2020, 3, 29);
 
     while (cur != nullptr) {
         int overdueBook = 0;
 
         for (int i = 0; i < cur->item.totalbook; i++)
         {
-            
             LibBook book = cur->item.book[i];
-            int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
 
-
-            if (current > dueDate)
-            {
+            //increase overdueBook if the book is overdue
+            if (isDue(book, current))
                 overdueBook++;
-            }
         }
 
         // Compute statistics for each course based on the data in the current node
@@ -674,7 +671,6 @@ bool printStuWithSameBook(List* list, char* callNum) {
 bool displayWarnedStudent(List* list, List* type1, List* type2)
 {
     Node* cur;
-    int current = calculateJulianDate(2020, 3, 29);
     
     if (list->empty())
         return false;
@@ -691,17 +687,14 @@ bool displayWarnedStudent(List* list, List* type1, List* type2)
         for (int i = 0; i < cur->item.totalbook; i++)
         {
             LibBook book = cur->item.book[i];
-            int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
 
-            if (current - dueDate >= 10)
-            {
+            //determine the book is due >=10 from the current date
+            if (isDue(book, current, 10))
                 overdueBook1++;
-            }
 
-            if (current > dueDate)
-            {
+            //determine whether the book is due or not
+            if (isDue(book, current))
                 overdueBook2++;
-            }
         }
 
         // insert student to the type 1 list if more than 2 books that are overdue for >= 10 days 
@@ -740,6 +733,28 @@ bool printList(List list)
     }
 
     return true;
+}
+
+bool isDue(LibBook book,int currentDate)
+{
+    int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
+
+
+    if (current > dueDate)
+        return true;
+
+    return false;
+}
+
+bool isDue(LibBook book, int currentDate, int days)
+{
+    int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
+
+
+    if (current - dueDate >= days)
+        return true;
+
+    return false;
 }
 
 //*********************************************(9)**************************************************
