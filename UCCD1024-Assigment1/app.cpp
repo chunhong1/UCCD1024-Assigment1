@@ -373,16 +373,14 @@ bool InsertBook(string filename, List* list) {
             i++;
         }
 
-        // Get the borrow date from the 'borrow' string
+        // Assign the book borrow date from the 'borrow' string
         extractDate(borrow, book.borrow);
         
-        // Get the due date from the 'due' string
-        extractDate(due, book.due);
-        
-
+        // Assign the book due date from the 'due' string
+        extractDate(due, book.due);  
 
         int dueDate = calculateJulianDate(book.due.year, book.due.month, book.due.day);
-        if ((current - dueDate) * 0.5 > 0) {
+        if (isDue(book,current)) {
             book.fine = ((current - dueDate) * 0.5);
         }
 
@@ -729,6 +727,7 @@ bool isDue(LibBook book, int currentDate, int days)
     return false;
 }
 
+// function to extract day, month and year from a string
 void extractDate(char* dateStr, Date& date)
 {
     int componentValue = 0;
