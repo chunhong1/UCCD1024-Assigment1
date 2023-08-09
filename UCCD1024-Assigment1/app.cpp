@@ -105,7 +105,7 @@ int main() {
         case 5:
 
             if (Display(&studentList, source, detail)) {
-
+                cout << "Successfully display output." << endl;
             }
             system("pause");
             break;
@@ -119,11 +119,6 @@ int main() {
                 cout << "Empty list. Unable to compute statistics." << endl;
             }
             system("pause");
-            break;
-            {
-                computeAndDisplayStatistics(&studentList);
-            }
-
             break;
 
         case 7:
