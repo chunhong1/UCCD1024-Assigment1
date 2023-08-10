@@ -462,7 +462,6 @@ bool Display(List* list, int source, int detail) {
 
         cout << "Successfully display output to " << outputFile << endl;
         cout << endl;
-        cout << "Successfully display output" << endl;
         output.close();
         return true;
     }
@@ -489,12 +488,9 @@ bool Display(List* list, int source, int detail) {
                 cout << endl;
                 cout << "****************************************************************************" << endl << endl;
             }
-
             cur = cur->next;
             StuNo++;
         }
-
-        cout << "Successfully display output." << endl;
         return true;
     }
     else {
@@ -761,7 +757,7 @@ void replaceUnderscoresWithSpaces(char* str)
 int menu() {
     int operation;
     system("cls");
-    center("UTAR Library System?");
+    center("UTAR Library System");
     center("Faculty of Information and Communication Technology");
     center("Menu");
     center("Please select an option:          ");
